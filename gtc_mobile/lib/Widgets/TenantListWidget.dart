@@ -54,7 +54,7 @@ class TenantListWidget extends StatelessWidget{
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
                   child: Image.asset(
-                    'assets/$i.jpg',
+                    'assets/tenantListImages/$i.jpg',
                     height: 50,
                     width: 50,
                   ),
