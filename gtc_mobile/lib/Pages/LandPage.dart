@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../Widgets/TenantListWidget.dart';
 import '../Widgets/OngoingOrdersWidget.dart';
+import '../Widgets/OrdersQueueWidget.dart';
 
 class LandPage extends StatelessWidget{
   @override
@@ -57,6 +58,7 @@ class LandPage extends StatelessWidget{
                   children: [
                     TenantListWidget(),
                     OngoingOrdersWidget(),
+                    OrdersQueueWidget(),
                   ],
                 ),
               )

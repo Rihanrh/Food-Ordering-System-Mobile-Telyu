@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class OngoingOrdersWidget extends StatelessWidget {
+class OrdersQueueWIdget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -12,9 +12,9 @@ class OngoingOrdersWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 12,top: 10),
+                padding: EdgeInsets.only(left: 12, top: 10),
                 child: Text(
-                  "Pesanan Sedang Berlangsung",
+                  "Antrian Kantin",
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -29,12 +29,12 @@ class OngoingOrdersWidget extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              for (int i = 1; i <= 2; i++)
+              for (int i = 1; i <= 4; i++)
                 Container(
                   margin: EdgeInsets.all(25),
                   padding: EdgeInsets.all(5),
-                  height: 140,
-                  width: 330,
+                  height: 100,
+                  width: 200,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -51,25 +51,39 @@ class OngoingOrdersWidget extends StatelessWidget {
                       // Text widget for the text
                       Center(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 60), // Adjust spacing as needed
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            // crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Saat ini kamu belum",
+                                "Kantin Rasya",
                                 style: GoogleFonts.poppins(
-                                  fontSize: 18,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w600,
-                                  color: Color.fromRGBO(202, 37, 37, 1),
+                                  color: Color.fromRGBO(126, 0, 0, 1),
                                 ),
                               ),
+                              SizedBox(
+                                  height:
+                                      4), // Adjust spacing between lines as needed
                               Text(
-                                "memiliki pesanan :(",
+                                "No Antrian : R122,R123",
                                 style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color.fromRGBO(202, 37, 37, 1),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromRGBO(113, 0, 0, 0.5),
+                                ),
+                              ),
+                              SizedBox(
+                                  height:
+                                      4), // Adjust spacing between lines as needed
+                              Text(
+                                "13 Orders To Go",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromRGBO(113, 0, 0, 0.5),
                                 ),
                               ),
                             ],
@@ -81,7 +95,8 @@ class OngoingOrdersWidget extends StatelessWidget {
                 ),
             ],
           ),
-        )
+        ),
+        
       ],
     );
   }
