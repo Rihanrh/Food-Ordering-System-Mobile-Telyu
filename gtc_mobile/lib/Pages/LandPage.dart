@@ -58,7 +58,7 @@ class LandPage extends StatelessWidget{
                   children: [
                     TenantListWidget(),
                     OngoingOrdersWidget(),
-                    OrdersQueueWIdget(),
+                    OrdersQueueWidget(),
                   ],
                 ),
               )
