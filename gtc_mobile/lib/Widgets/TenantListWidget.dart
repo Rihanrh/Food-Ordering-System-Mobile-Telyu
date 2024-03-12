@@ -49,17 +49,17 @@ class TenantListWidget extends StatelessWidget{
           child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: EdgeInsets.all(5),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
-                child: Image.asset(
-                  '../images/ppListTenant/$i.jpg',
-                  height: 50,
-                  width: 50,
+              Padding(
+                padding: EdgeInsets.all(5),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
+                  child: Image.asset(
+                    'assets/$i.jpg',
+                    height: 50,
+                    width: 50,
+                  ),
                 ),
               ),
-            ),
               Padding(
                 padding: EdgeInsets.only(top: 5), // Adjust the top padding as needed
                 child: Text(
