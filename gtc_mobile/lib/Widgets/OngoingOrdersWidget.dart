@@ -12,7 +12,7 @@ class OngoingOrdersWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 12,top: 10),
+                padding: EdgeInsets.only(left: 12, top: 10),
                 child: Text(
                   "Pesanan Sedang Berlangsung",
                   style: GoogleFonts.poppins(
@@ -48,13 +48,12 @@ class OngoingOrdersWidget extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      // Text widget for the text
                       Center(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 60), // Adjust spacing as needed
+                          padding: EdgeInsets.symmetric(horizontal: 60),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            // crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 "Saat ini kamu belum",

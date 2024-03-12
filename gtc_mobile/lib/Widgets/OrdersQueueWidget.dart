@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class OrdersQueueWIdget extends StatelessWidget {
+class OrdersQueueWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -48,7 +48,6 @@ class OrdersQueueWIdget extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      // Text widget for the text
                       Center(
                         child: Padding(
                           padding: EdgeInsets.symmetric(
@@ -64,9 +63,7 @@ class OrdersQueueWIdget extends StatelessWidget {
                                   color: Color.fromRGBO(126, 0, 0, 1),
                                 ),
                               ),
-                              SizedBox(
-                                  height:
-                                      4), // Adjust spacing between lines as needed
+                              SizedBox(height: 4),
                               Text(
                                 "No Antrian : R122,R123",
                                 style: GoogleFonts.poppins(
@@ -75,9 +72,7 @@ class OrdersQueueWIdget extends StatelessWidget {
                                   color: Color.fromRGBO(113, 0, 0, 0.5),
                                 ),
                               ),
-                              SizedBox(
-                                  height:
-                                      4), // Adjust spacing between lines as needed
+                              SizedBox(height: 4),
                               Text(
                                 "13 Orders To Go",
                                 style: GoogleFonts.poppins(
@@ -96,7 +91,6 @@ class OrdersQueueWIdget extends StatelessWidget {
             ],
           ),
         ),
-        
       ],
     );
   }
