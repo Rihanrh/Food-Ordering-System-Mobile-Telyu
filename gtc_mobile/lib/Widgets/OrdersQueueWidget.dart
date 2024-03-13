@@ -33,7 +33,7 @@ class OrdersQueueWidget extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.all(25),
                   padding: EdgeInsets.all(5),
-                  height: 100,
+                  height: 157,
                   width: 200,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -51,7 +51,7 @@ class OrdersQueueWidget extends StatelessWidget {
                       Center(
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                              horizontal: 20, vertical: 35),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
