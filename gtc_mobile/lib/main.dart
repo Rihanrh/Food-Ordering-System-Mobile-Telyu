@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'Pages/LandPage.dart';
+import 'Widgets/BottomNavBarWidget.dart' as BottomNavBarWidget;
+
 
 void main() {
   runApp(const MyApp());
@@ -15,10 +17,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Kantin Telyu',
       debugShowCheckedModeBanner: false,
-      routes: {
-        "/" : (context) => LandPage(),
-      },
-
+      theme: ThemeData(
+        primaryColor: Color.fromRGBO(211, 36, 43, 1)
+      ),
+      home: BottomNavBarWidget.BottomNavigationBar(),
     );
   }
 }

@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../Widgets/TenantListWidget.dart';
-import '../Widgets/OngoingOrdersWidget.dart';
-import '../Widgets/OrdersQueueWidget.dart';
+import '../Widgets/MenusWidget.dart';
 import '../Widgets/SearchBarWidget.dart';
 
-class LandPage extends StatefulWidget {
+class MenusPage extends StatefulWidget {
   @override
-  _LandPageState createState() => _LandPageState();
+  _MenusPageState createState() =>_MenusPageState();
 }
 
-class _LandPageState extends State<LandPage> {
-
+class _MenusPageState extends State<MenusPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,21 +21,22 @@ class _LandPageState extends State<LandPage> {
                 padding: EdgeInsets.only(right: 20, left: 15, top: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [],
+                  children: [
+                    
+                  ],
                 ),
               ),
               // Body
               Container(
-                padding: EdgeInsets.only(top : 10, bottom: 20),
+                padding: EdgeInsets.only(top: 10),
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TenantListWidget(),
-                    OngoingOrdersWidget(),
-                    OrdersQueueWidget(),
+                    
+                    MenusWidget(),
                   ],
                 ),
               ),
