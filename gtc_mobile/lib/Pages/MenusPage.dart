@@ -4,7 +4,7 @@ import '../Widgets/SearchBarWidget.dart';
 
 class MenusPage extends StatefulWidget {
   @override
-  _MenusPageState createState() =>_MenusPageState();
+  _MenusPageState createState() => _MenusPageState();
 }
 
 class _MenusPageState extends State<MenusPage> {
@@ -21,9 +21,7 @@ class _MenusPageState extends State<MenusPage> {
                 padding: EdgeInsets.only(right: 20, left: 15, top: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    
-                  ],
+                  children: [],
                 ),
               ),
               // Body
@@ -35,7 +33,6 @@ class _MenusPageState extends State<MenusPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    
                     MenusWidget(),
                   ],
                 ),

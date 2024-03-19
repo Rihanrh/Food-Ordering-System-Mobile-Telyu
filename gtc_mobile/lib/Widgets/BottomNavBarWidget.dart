@@ -10,6 +10,7 @@ class BottomNavigationBar extends StatefulWidget {
   @override
   State<BottomNavigationBar> createState() => _BottomNavigationBarState();
 }
+
 class _BottomNavigationBarState extends State<BottomNavigationBar> {
   int pageIndex = 0;
 
@@ -20,7 +21,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
   ];
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
         index: pageIndex,
@@ -30,7 +31,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: Colors.grey[300]!, width: 1), 
+            top: BorderSide(color: Colors.grey[300]!, width: 1),
           ),
         ),
         child: AnimatedBottomNavigationBar(
@@ -48,7 +49,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
           iconSize: 30,
           rightCornerRadius: 0,
           elevation: 0,
-          onTap: (index){
+          onTap: (index) {
             setState(() {
               pageIndex = index;
             });
@@ -58,4 +59,3 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
     );
   }
 }
-
