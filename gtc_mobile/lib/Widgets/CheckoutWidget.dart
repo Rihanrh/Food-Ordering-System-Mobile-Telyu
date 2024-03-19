@@ -3,8 +3,7 @@ import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CheckoutModal {
-  static final _controller =
-      ValueNotifier<bool>(false); // Make _controller static
+  static final _controller = ValueNotifier<bool>(false);
 
   static void show(BuildContext context) {
     showModalBottomSheet(
@@ -73,7 +72,7 @@ class CheckoutModal {
               ),
               SizedBox(height: 20),
               Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,14 +82,14 @@ class CheckoutModal {
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color : Color.fromRGBO(51, 51, 51, 1),
+                          color: Color.fromRGBO(51, 51, 51, 1),
                         ),
                       ),
                       Text(
                         'Rp. 25.000',
                         style: GoogleFonts.poppins(
                           color: Color.fromRGBO(183, 73, 73, 1),
-                          fontWeight : FontWeight.w600,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
@@ -119,14 +118,13 @@ class CheckoutModal {
                       child: Text(
                         'Catatan',
                         style: GoogleFonts.poppins(
-                            color: Color.fromRGBO(177, 27, 27, 1),
-                            fontWeight : FontWeight.bold,
-                            ),
+                          color: Color.fromRGBO(177, 27, 27, 1),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Colors.white), // Background color
-                        // foregroundColor: MaterialStateProperty.all(Color.fromRGBO(177, 27, 27, 1)), // Text color
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                           side:
@@ -162,15 +160,12 @@ class CheckoutModal {
                     ),
                   ),
                   SizedBox(width: 1),
-                  
                   IconButton(
                     icon: Icon(
                       Icons.remove_circle_outline,
                       color: Color.fromRGBO(211, 36, 43, 1),
                     ),
-                    onPressed: () {
-                      // Handle remove button press
-                    },
+                    onPressed: () {},
                   ),
                   Text(
                     '1',
@@ -178,15 +173,12 @@ class CheckoutModal {
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
-                  ), // Display item quantity
+                  ),
                   IconButton(
                     icon: Icon(Icons.add_circle_outline,
                         color: Color.fromRGBO(211, 36, 43, 1)),
-                    onPressed: () {
-                      // Handle add button press
-                    },
+                    onPressed: () {},
                   ),
-                  
                 ],
               ),
             ],
