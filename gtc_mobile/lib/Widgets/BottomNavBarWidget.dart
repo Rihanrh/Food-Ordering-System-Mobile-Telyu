@@ -44,7 +44,6 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
           activeColor: Color.fromRGBO(211, 36, 43, 1),
           gapLocation: GapLocation.none,
           activeIndex: pageIndex,
-          // notchAndCornersAnimation: NotchSmoothness.softEdge,
           leftCornerRadius: 10,
           iconSize: 30,
           rightCornerRadius: 0,

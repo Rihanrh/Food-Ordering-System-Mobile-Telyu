@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'CheckoutWidget.dart';
 
 class SearchBarWidget extends StatelessWidget {
@@ -42,7 +43,6 @@ class SearchBarWidget extends StatelessWidget {
                   size: 30,
                 ),
                 onPressed: () {
-                  // Call the show method from CartModal
                   CheckoutModal.show(context);
                 },
               ),
@@ -57,7 +57,7 @@ class SearchBarWidget extends StatelessWidget {
                   ),
                   child: Text(
                     '5',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       color: Color.fromRGBO(202, 37, 37, 1),
                       fontSize: 12,
                     ),
