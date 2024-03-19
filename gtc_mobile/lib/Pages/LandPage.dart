@@ -11,7 +11,6 @@ class LandPage extends StatefulWidget {
 }
 
 class _LandPageState extends State<LandPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +29,7 @@ class _LandPageState extends State<LandPage> {
               ),
               // Body
               Container(
-                padding: EdgeInsets.only(top : 10, bottom: 20),
+                padding: EdgeInsets.only(top: 10, bottom: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
