@@ -41,7 +41,7 @@ class _MenusWidgetState extends State<MenusWidget> {
                 padding: EdgeInsets.only(left: 12, top: 10),
                 child: Text(
                   "Daftar Menu",
-                  style:  GoogleFonts.poppins(
+                  style: GoogleFonts.poppins(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Color.fromRGBO(211, 36, 43, 1),
@@ -64,7 +64,7 @@ class _MenusWidgetState extends State<MenusWidget> {
           padding: const EdgeInsets.only(left: 22, top: 8, bottom: 10),
           child: Text(
             menuName,
-            style:  GoogleFonts.poppins(
+            style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w600,
               color: Color.fromRGBO(126, 0, 0, 1),
@@ -150,7 +150,7 @@ class _MenusWidgetState extends State<MenusWidget> {
                   ),
                   Text(
                     (_menuQuantities[uniqueKey] ?? 0).toString(),
-                    style:GoogleFonts.poppins(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

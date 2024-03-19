@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'CheckoutWidget.dart';
 
 class SearchBarWidget extends StatelessWidget {
   @override
@@ -31,39 +32,41 @@ class SearchBarWidget extends StatelessWidget {
           ),
         ),
         Padding(
-  padding: const EdgeInsets.only(right: 8.0),
-  child: Stack(
-    children: [
-      IconButton(
-        icon: Icon(
-          Icons.shopping_cart_checkout_outlined,
-          color: Colors.white,
-          size: 30,
-        ),
-        onPressed: () {},
-      ),
-      Positioned(
-        right: 2,
-        top: 2,
-        child: Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Stack(
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.shopping_cart_checkout_outlined,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () {
+                  // Call the show method from CartModal
+                  CheckoutModal.show(context);
+                },
+              ),
+              Positioned(
+                right: 2,
+                top: 2,
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '5',
+                    style: TextStyle(
+                      color: Color.fromRGBO(202, 37, 37, 1),
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          child: Text(
-            '5', 
-            style: TextStyle(
-              color: Color.fromRGBO(202, 37, 37, 1),
-              fontSize: 12,
-            ),
-          ),
         ),
-      ),
-    ],
-  ),
-),
-
       ],
     );
   }
