@@ -4,16 +4,37 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CheckoutModal {
   static final _controller = ValueNotifier<bool>(false);
-  static String _paymentMethod = 'Tunai'; // Default payment method
 
   static void show(BuildContext context) {
     showModalBottomSheet<dynamic>(
       isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
-        return Wrap(
-          children: <Widget>[
-            Container(
+        return CheckoutModalWidget();
+      },
+    );
+  }
+}
+
+class CheckoutModalWidget extends StatefulWidget {
+  @override
+  _CheckoutModalWidgetState createState() => _CheckoutModalWidgetState();
+}
+
+class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
+  String _paymentMethod = 'Tunai'; // Default payment method
+
+  void _handlePaymentMethodChange(String value) {
+    setState(() {
+      _paymentMethod = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: <Widget>[
+        Container(
           padding: EdgeInsets.only(left: 0, right: 0, top: 10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -71,7 +92,6 @@ class CheckoutModal {
                   ),
                 ),
               ),
-              
               SizedBox(height: 10),
               Divider(
                 color: Colors.grey,
@@ -148,12 +168,11 @@ class CheckoutModal {
                     ),
                   ),
                   AdvancedSwitch(
-                    controller: _controller,
+                    controller: CheckoutModal._controller,
                     enabled: true,
                     height: 35,
                     width: 150,
-                    borderRadius:
-                        const BorderRadius.all(Radius.circular(120)),
+                    borderRadius: const BorderRadius.all(Radius.circular(120)),
                     inactiveColor: Colors.grey,
                     activeColor: Color.fromRGBO(202, 37, 37, 1),
                     inactiveChild: Text(
@@ -210,32 +229,26 @@ class CheckoutModal {
                   ),
                 ),
               ),
-              RadioListTile(
+              RadioListTile<String>(
                 title: Text('Tunai'),
                 value: 'Tunai',
                 groupValue: _paymentMethod,
-                onChanged: (value) {
-                  setState((){
-                    _paymentMethod = value!;
-                  });
+                onChanged: (String? value) {
+                  _handlePaymentMethodChange(value ?? '');
                 },
               ),
-              RadioListTile(
+              RadioListTile<String>(
                 title: Text('QRIS'),
                 value: 'QRIS',
                 groupValue: _paymentMethod,
-                onChanged: (value) {
-                  setState((){
-                    _paymentMethod = value!;
-                  });
+                onChanged: (String? value) {
+                  _handlePaymentMethodChange(value ?? '');
                 },
               ),
             ],
           ),
         )
-          ],
-        );
-      },
+      ],
     );
   }
 }
