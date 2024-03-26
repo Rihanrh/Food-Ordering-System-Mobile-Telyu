@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'SelectTable.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 class CheckoutModal {
   static final _controller = ValueNotifier<bool>(false);
@@ -54,12 +56,33 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                 title: Text(
                   'Nomor Meja',
                   style: GoogleFonts.poppins(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Color.fromRGBO(126, 0, 0, 1),
                   ),
                 ),
-                onTap: () {},
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 45,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(126, 0, 0, 1),
+                        borderRadius: BorderRadius.circular(
+                            10), // Adjust the value as needed
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        '7A',
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Center(
                 child: Container(
@@ -90,8 +113,12 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                       ),
                     ),
                   ),
+                  
                 ),
+                
               ),
+              
+              
               SizedBox(height: 10),
               Divider(
                 color: Colors.grey,
@@ -157,8 +184,8 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.white),
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
+                          shape:
+                              MaterialStateProperty.all(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                             side: BorderSide(
                                 color: Color.fromRGBO(177, 27, 27, 1)),
@@ -230,20 +257,126 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                 ),
               ),
               RadioListTile<String>(
-                title: Text('Tunai'),
+                title: Row(
+                  children: [
+                    Icon(Icons.payments_outlined),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Tunai ( Bayar di Kasir )',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(51, 51, 51, 1),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 value: 'Tunai',
                 groupValue: _paymentMethod,
                 onChanged: (String? value) {
                   _handlePaymentMethodChange(value ?? '');
                 },
+                controlAffinity: ListTileControlAffinity.trailing,
+                activeColor: Color.fromRGBO(211, 36, 43, 1),
               ),
               RadioListTile<String>(
-                title: Text('QRIS'),
+                title: Row(
+                  children: [
+                    Icon(Icons.qr_code_scanner_outlined),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'QRIS ( Bayar di Tenant )',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(51, 51, 51, 1),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 value: 'QRIS',
                 groupValue: _paymentMethod,
                 onChanged: (String? value) {
                   _handlePaymentMethodChange(value ?? '');
                 },
+                controlAffinity: ListTileControlAffinity.trailing,
+                activeColor: Color.fromRGBO(211, 36, 43, 1),
+              ),
+              SizedBox(height: 10),
+              Divider(
+                color: Colors.grey,
+                height: 1,
+              ),
+              Column(
+                children: [
+                  ListTile(
+                    title: Text(
+                      'Rincian Pembayaran',
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(126, 0, 0, 1),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Nasi Goreng',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(51, 51, 51, 1),
+                      ),
+                    ),
+                    trailing: Text(
+                      '28000',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(51, 51, 51, 1),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Nasi Goreng',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(51, 51, 51, 1),
+                      ),
+                    ),
+                    trailing: Text(
+                      '28000',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(51, 51, 51, 1),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Total Pembayaran',
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(211, 36, 43, 1)),
+                    ),
+                    trailing: Text(
+                      '54000',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(51, 51, 51, 1),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -252,3 +385,15 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
     );
   }
 }
+
+ Future<void> _showSelectTableDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => SelectTableWidget(onTableSelected: (selectedTable) {
+        // Do something with the selected table, e.g., update UI, call APIs, etc.
+        print('Selected Table: $selectedTable');
+        Navigator.pop(context); // Close the dialog
+      }),
+    );
+  }
+

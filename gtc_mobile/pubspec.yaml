@@ -44,6 +44,7 @@ dependencies:
   modal_bottom_sheet: ^3.0.0
   switcher_button: ^0.0.4
   flutter_advanced_switch: ^3.1.0
+  adaptive_dialog: ^2.1.0
 
 dev_dependencies:
   flutter_test:
