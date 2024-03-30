@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color.fromRGBO(211, 36, 43, 1)
       ),
+      
       home: BottomNavBarWidget.BottomNavigationBar(),
     );
   }
