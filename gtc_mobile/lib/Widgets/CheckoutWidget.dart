@@ -207,25 +207,38 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Nasi Goreng',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromRGBO(51, 51, 51, 1),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Nasi Goreng',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromRGBO(51, 51, 51, 1),
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Rp. 25.000',
-                          style: GoogleFonts.poppins(
-                            color: Color.fromRGBO(183, 73, 73, 1),
-                            fontWeight: FontWeight.w600,
+                          Text(
+                            'Rp. 25.000',
+                            style: GoogleFonts.poppins(
+                              color: Color.fromRGBO(183, 73, 73, 1),
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Text(
+                              'Catatan : ',
+                              style: GoogleFonts.poppins(
+                                color: Color.fromRGBO(51, 51, 51, 1),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Spacer(),
@@ -310,7 +323,8 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                                     TextButton(
                                       onPressed: () {
                                         setState(() {
-                                          _catatan = _tempCatatan; // Assign tempCatatan to _catatan
+                                          _catatan =
+                                              _tempCatatan; // Assign tempCatatan to _catatan
                                         });
                                         print('Inputted Catatan: $_catatan');
                                         Navigator.of(context).pop();
@@ -524,6 +538,37 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                     ),
                   ),
                 ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  // Wrap the button with SizedBox to control its width
+                  width: double
+                      .infinity, // Set width to infinity to make it as wide as possible
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Add functionality for the "Pesan" button here
+                      // For now, let's just print a message
+                      print('Pesan button pressed');
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Color.fromRGBO(211, 36, 43, 1),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      'Pesan',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

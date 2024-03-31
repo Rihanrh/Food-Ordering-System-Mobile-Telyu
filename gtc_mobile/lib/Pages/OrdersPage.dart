@@ -17,7 +17,7 @@ class OrdersPage extends StatelessWidget {
             backgroundColor: Color.fromRGBO(211, 36, 43, 1),
             centerTitle: true,
             title: Text(
-              'Status Pesanan',
+              'Statu Pesanan',
               style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -67,7 +67,6 @@ class OrdersPage extends StatelessWidget {
           children: [
             HistoryOrdersWidget(),
             SedangBerlangsungPesananWidget(),
-            Center(child: Text('Tab 2')),
           ],
         ),
       ),
