@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Widgets/HistoryOrdersWidget.dart';
+import '../Widgets/SedangBerlangsungPesananWidget.dart';
+
 class OrdersPage extends StatelessWidget {
   const OrdersPage({Key? key}) : super(key: key);
 
@@ -10,7 +12,7 @@ class OrdersPage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(90), 
+          preferredSize: Size.fromHeight(90),
           child: AppBar(
             backgroundColor: Color.fromRGBO(211, 36, 43, 1),
             centerTitle: true,
@@ -64,6 +66,7 @@ class OrdersPage extends StatelessWidget {
         body: TabBarView(
           children: [
             HistoryOrdersWidget(),
+            SedangBerlangsungPesananWidget(),
             Center(child: Text('Tab 2')),
           ],
         ),
