@@ -25,6 +25,10 @@ class CheckoutModalWidget extends StatefulWidget {
 
 class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
   String _paymentMethod = 'Tunai'; // Default payment method
+  String _catatan = ''; // Default catatan
+  String _tempCatatan = ''; // Temporary catatan
+  int? _selectedMejaNumber = 1;
+  int? _temptSelectedMejaNumber;
 
   void _handlePaymentMethodChange(String value) {
     setState(() {
@@ -74,7 +78,7 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        '7A',
+                        '$_selectedMejaNumber',
                         style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -89,7 +93,84 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                   width: 335,
                   margin: EdgeInsets.all(10),
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.cancel_outlined),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                Center(
+                                  child: Text(
+                                    'Pilih Nomor Meja',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(126, 0, 0, 1),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Pilihlah nomor meja sesuai yang terletak di meja.',
+                                  style: GoogleFonts.poppins(fontSize: 10),
+                                ),
+                                SizedBox(height: 13),
+                                DropdownButtonFormField<int>(
+                                  value: _temptSelectedMejaNumber ??
+                                      _selectedMejaNumber,
+                                  onChanged: (int? newValue) {
+                                    setState(() {
+                                      _temptSelectedMejaNumber = newValue;
+                                    });
+                                  },
+                                  items: List.generate(25, (index) => index + 1)
+                                      .map((int value) {
+                                    return DropdownMenuItem<int>(
+                                      value: value,
+                                      child: Text('$value'),
+                                    );
+                                  }).toList(),
+                                  decoration: InputDecoration(
+                                    labelText: 'Nomor Meja',
+                                    prefixIcon: Icon(Icons.table_restaurant),
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  if (_temptSelectedMejaNumber != null) {
+                                    setState(() {
+                                      _selectedMejaNumber =
+                                          _temptSelectedMejaNumber;
+                                    });
+                                  }
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                     style: ButtonStyle(
                       side: MaterialStateProperty.all(BorderSide(
                         color: Color.fromRGBO(126, 0, 0, 1),
@@ -113,12 +194,8 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                       ),
                     ),
                   ),
-                  
                 ),
-                
               ),
-              
-              
               SizedBox(height: 10),
               Divider(
                 color: Colors.grey,
@@ -173,7 +250,77 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                     padding: const EdgeInsets.all(15.0),
                     child: Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext Context) {
+                                return AlertDialog(
+                                  title: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.cancel_outlined),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          'Catatan',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromRGBO(126, 0, 0, 1),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Opsional',
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 10)),
+                                      SizedBox(height: 13),
+                                      TextFormField(
+                                        onChanged: (value) {
+                                          _tempCatatan =
+                                              value; // Update temporary variable
+                                        },
+                                        initialValue: _tempCatatan,
+                                        decoration: InputDecoration(
+                                          prefixIcon: Icon(Icons.event_note),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                          hintText:
+                                              'Contoh: Jangan pakai sayur',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _catatan = _tempCatatan; // Assign tempCatatan to _catatan
+                                        });
+                                        print('Inputted Catatan: $_catatan');
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
                         child: Text(
                           'Catatan',
                           style: GoogleFonts.poppins(
@@ -386,14 +533,13 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
   }
 }
 
- Future<void> _showSelectTableDialog(BuildContext context) async {
-    await showDialog(
-      context: context,
-      builder: (context) => SelectTableWidget(onTableSelected: (selectedTable) {
-        // Do something with the selected table, e.g., update UI, call APIs, etc.
-        print('Selected Table: $selectedTable');
-        Navigator.pop(context); // Close the dialog
-      }),
-    );
-  }
-
+Future<void> _showSelectTableDialog(BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (context) => SelectTableWidget(onTableSelected: (selectedTable) {
+      // Do something with the selected table, e.g., update UI, call APIs, etc.
+      print('Selected Table: $selectedTable');
+      Navigator.pop(context); // Close the dialog
+    }),
+  );
+}
