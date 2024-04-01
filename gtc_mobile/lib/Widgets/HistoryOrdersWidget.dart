@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../Pages/HistoryOrderDetailPage.dart';
 
 class HistoryOrdersWidget extends StatelessWidget {
   @override
@@ -20,7 +21,12 @@ class HistoryOrdersWidget extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    debugPrint('Card tapped.');
+                                        Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                HistoryOrderDetailPage()),
+                      );
                   },
                   child: Stack(
                     children: [

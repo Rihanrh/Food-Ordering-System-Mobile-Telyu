@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'SelectTable.dart';
-import 'package:adaptive_dialog/adaptive_dialog.dart';
+import '../Pages/PaymentConfirmationLoadPage.dart';
 
 class CheckoutModal {
   static final _controller = ValueNotifier<bool>(false);
@@ -547,9 +547,12 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                       .infinity, // Set width to infinity to make it as wide as possible
                   child: ElevatedButton(
                     onPressed: () {
-                      // Add functionality for the "Pesan" button here
-                      // For now, let's just print a message
-                      print('Pesan button pressed');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                PaymentConfirmationLoadPage()),
+                      );
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
