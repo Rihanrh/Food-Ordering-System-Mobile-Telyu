@@ -40,67 +40,13 @@ class _HistoryOrderDetailPageState extends State<HistoryOrderDetailPage> {
               ),
             ),
           ),
+
           SizedBox(height: 10),
           Divider(
             color: Colors.grey,
             height: 1,
           ),
-          ListTile(
-            title: Text(
-              'Status Pesanan',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(126, 0, 0, 1),
-              ),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 45,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(126, 0, 0, 1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    '7',
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          ListTile(
-            title: Text(
-              'No Antrian : R123',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Color.fromRGBO(202, 37, 37, 1),
-              ),
-            ),
-          ),
-          ListTile(
-            title: Text(
-              'Menunggu Verifikasi Pembayaran',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Color.fromRGBO(202, 37, 37, 1),
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          Divider(
-            color: Colors.grey,
-            height: 1,
-          ),
+          
           ListTile(
             title: Text(
               'Rincian Pesanan',
@@ -111,28 +57,35 @@ class _HistoryOrderDetailPageState extends State<HistoryOrderDetailPage> {
               ),
             ),
           ),
+
           ListTile(
             title: Text(
               'Nasi Goreng',
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
             ),
             trailing: Text(
-              '2x',
+              'x1',
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 color: Colors.black,
               ),
             ),
           ),
+
           ListTile(
             title: Text(
-              'Catatan : Jangan Pakai Sayur',
+              'Mie Goreng',
+              style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
+            ),
+            trailing: Text(
+              'x2',
               style: GoogleFonts.poppins(
-                fontSize: 14,
+                fontSize: 16,
                 color: Colors.black,
               ),
             ),
           ),
+          
           SizedBox(height: 10),
           Divider(
             color: Colors.grey,
@@ -148,36 +101,35 @@ class _HistoryOrderDetailPageState extends State<HistoryOrderDetailPage> {
               ),
             ),
           ),
+
           ListTile(
             title: Text(
               'Nasi Goreng',
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
             ),
             trailing: Text(
-              '54000',
+              'Rp 15.000',
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 color: Colors.black,
               ),
             ),
           ),
+
           ListTile(
             title: Text(
-              'Total Pembayaran',
-              style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+              'Mie Goreng Goreng',
+              style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
             ),
             trailing: Text(
-              '54000',
+              'Rp 30.000',
               style: GoogleFonts.poppins(
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
           ),
+
           SizedBox(height: 10),
           Divider(
             color: Colors.grey,
@@ -220,7 +172,7 @@ class _HistoryOrderDetailPageState extends State<HistoryOrderDetailPage> {
                   ),
                 ),
                 child: Text(
-                  'Batalkan Pesanan',
+                  'Pesan Kembali',
                   style: GoogleFonts.poppins(
                     color: Colors.white,
                   ),
