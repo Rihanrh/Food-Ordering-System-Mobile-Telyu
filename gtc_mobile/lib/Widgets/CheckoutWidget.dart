@@ -230,7 +230,7 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10.0),
                             child: Text(
-                              'Catatan : ',
+                              'Catatan : $_catatan',
                               style: GoogleFonts.poppins(
                                 color: Color.fromRGBO(51, 51, 51, 1),
                                 fontWeight: FontWeight.w600,
