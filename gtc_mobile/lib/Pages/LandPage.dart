@@ -27,7 +27,6 @@ class _LandPageState extends State<LandPage> {
                   children: [],
                 ),
               ),
-              // Body
               Container(
                 padding: EdgeInsets.only(top: 10, bottom: 20),
                 decoration: BoxDecoration(

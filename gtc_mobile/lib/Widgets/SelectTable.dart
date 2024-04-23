@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 class SelectTableWidget extends StatelessWidget {
-  final Function(int) onTableSelected; // Callback function to pass selected table
+  final Function(int) onTableSelected; 
 
   SelectTableWidget({required this.onTableSelected});
 
@@ -34,14 +34,14 @@ class SelectTableWidget extends StatelessWidget {
     );
 
     if (result != null) {
-      // result is a List<String> containing entered text from text fields
+
       String enteredText = result.single;
-      // Assume entered text is the selected table
-      int selectedTable = int.tryParse(enteredText) ?? 0; // Default to 0 if parsing fails
-      // Call the callback function to pass the selected table
+
+      int selectedTable = int.tryParse(enteredText) ?? 0;
+
       onTableSelected(selectedTable);
     } else {
-      // User pressed cancel
+
       print('User canceled dialog');
     }
   }

@@ -24,7 +24,7 @@ class _MenusPageState extends State<MenusPage> {
                   children: [],
                 ),
               ),
-              // Body
+
               Container(
                 padding: EdgeInsets.only(top: 10),
                 decoration: BoxDecoration(

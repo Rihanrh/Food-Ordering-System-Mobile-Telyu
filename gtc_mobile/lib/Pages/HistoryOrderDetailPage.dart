@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../Widgets/CheckoutWidget.dart';
 
 class HistoryOrderDetailPage extends StatefulWidget {
   @override
@@ -148,18 +149,11 @@ class _HistoryOrderDetailPageState extends State<HistoryOrderDetailPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
-              // Wrap the button with SizedBox to control its width
               width: double
-                  .infinity, // Set width to infinity to make it as wide as possible
+                  .infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Ubah
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) =>
-                  //           PaymentConfirmationLoadPage()),
-                  // );
+CheckoutModal.show(context);
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(

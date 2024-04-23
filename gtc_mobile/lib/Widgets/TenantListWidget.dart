@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../Pages/MenusPage.dart';
 
 class TenantListWidget extends StatefulWidget {
   @override
@@ -19,8 +20,8 @@ class _TenantListWidgetState extends State<TenantListWidget> {
     {"namaTenant": "Reren", "profileTenant": "assets/tenantListImages/9.jpg"},
   ];
 
-  int _pageSize = 3; 
-  int _currentPage = 1; 
+  int _pageSize = 3;
+  int _currentPage = 1;
 
   bool _isLoading = false;
 
@@ -52,8 +53,6 @@ class _TenantListWidgetState extends State<TenantListWidget> {
       setState(() {
         _isLoading = true;
       });
-
-      // Simulating loading delay
       Future.delayed(Duration(seconds: 1), () {
         setState(() {
           _currentPage++;
@@ -65,9 +64,8 @@ class _TenantListWidgetState extends State<TenantListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> currentPageData = tenantList
-        .take(_currentPage * _pageSize) 
-        .toList();
+    List<Map<String, dynamic>> currentPageData =
+        tenantList.take(_currentPage * _pageSize).toList();
 
     return Column(
       children: [
@@ -91,62 +89,72 @@ class _TenantListWidgetState extends State<TenantListWidget> {
           ),
         ),
         SizedBox(
-          height: 150, 
+          height: 150,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             controller: _scrollController,
             child: Row(
               children: [
                 ...currentPageData.map((tenant) {
-                  return Container(
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 6,
+                  return GestureDetector(
+                    onTap: () {
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MenusPage(),
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(5),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              tenant["profileTenant"],
-                              height: 50,
-                              width: 50,
+                      );
+                    },
+                    child: Container(
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 6,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.asset(
+                                tenant["profileTenant"],
+                                height: 50,
+                                width: 50,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 5),
-                          child: Text(
-                            tenant["namaTenant"],
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(202, 37, 37, 1),
+                          Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Text(
+                              tenant["namaTenant"],
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromRGBO(202, 37, 37, 1),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 }).toList(),
                 if (_isLoading)
                   Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                     child: CircularProgressIndicator(),
                   ),
               ],

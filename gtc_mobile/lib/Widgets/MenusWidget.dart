@@ -14,6 +14,17 @@ class _MenusWidgetState extends State<MenusWidget> {
     'Lili': 0,
   };
 
+List<Map<String, dynamic>> menuItems = [
+  {'name': 'Nasi Goreng', 'imagePath': 'assets/tenantListImages/1.jpg', 'price': 30000},
+  {'name': 'Mi Goreng', 'imagePath': 'assets/tenantListImages/2.jpg', 'price': 25000},
+  {'name': 'Bakso', 'imagePath': 'assets/tenantListImages/3.jpg', 'price': 20000},
+  {'name': 'Bakso Udang', 'imagePath': 'assets/tenantListImages/4.jpg', 'price': 35000},
+  {'name': 'Jus', 'imagePath': 'assets/tenantListImages/5.jpg', 'price': 15000},
+  {'name': 'Zuppa Soup', 'imagePath': 'assets/tenantListImages/6.jpg', 'price': 28000},
+  {'name': 'Batagor', 'imagePath': 'assets/tenantListImages/7.jpg', 'price': 18000},
+  {'name': 'Kwetiau Goreng', 'imagePath': 'assets/tenantListImages/8.jpg', 'price': 22000},
+];
+
   void _incrementQuantity(String menuName) {
     setState(() {
       _menuQuantities[menuName] = (_menuQuantities[menuName] ?? 0) + 1;
@@ -75,7 +86,8 @@ class _MenusWidgetState extends State<MenusWidget> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              for (int i = 1; i <= 8; i++) _buildMenuItem(menuName, i),
+              for (var menuItem in menuItems)
+                _buildMenuItem(menuName, menuItem),
             ],
           ),
         ),
@@ -83,91 +95,92 @@ class _MenusWidgetState extends State<MenusWidget> {
     );
   }
 
-  Widget _buildMenuItem(String menuName, int index) {
-    final uniqueKey = '$menuName-$index';
+  Widget _buildMenuItem(String menuName, Map<String, dynamic> menuItem) {
+  final uniqueKey = '${menuName}-${menuItem['name']}';
 
-    return Container(
-      key: Key(uniqueKey),
-      margin: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-      height: 120,
-      width: 300,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 6,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(15),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/tenantListImages/1.jpg',
-                height: 100,
-                width: 100,
-              ),
+  return Container(
+    key: Key(uniqueKey),
+    margin: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+    height: 120,
+    width: 300,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 1,
+          blurRadius: 6,
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(15),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              menuItem['imagePath'] ?? '',
+              height: 100,
+              width: 100,
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 5, top: 30),
-                child: Text(
-                  "Nasi Goreng",
-                  style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Color.fromRGBO(202, 37, 37, 1),
-                  ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 10, right: 5, top: 30),
+              child: Text(
+                menuItem['name'] ?? '',
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(202, 37, 37, 1),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 5),
-                child: Text(
-                  "Rp30,000",
-                  style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black,
-                  ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10, right: 5),
+              child: Text(
+                "Rp${menuItem['price'] ?? 0}", // Display the price
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.add_circle_outline,
-                        color: Color.fromRGBO(211, 36, 43, 1)),
-                    onPressed: () => _incrementQuantity(uniqueKey),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.add_circle_outline,
+                      color: Color.fromRGBO(211, 36, 43, 1)),
+                  onPressed: () => _incrementQuantity(uniqueKey),
+                ),
+                Text(
+                  (_menuQuantities[uniqueKey] ?? 0).toString(),
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text(
-                    (_menuQuantities[uniqueKey] ?? 0).toString(),
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.remove_circle_outline,
+                    color: Color.fromRGBO(211, 36, 43, 1),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.remove_circle_outline,
-                      color: Color.fromRGBO(211, 36, 43, 1),
-                    ),
-                    onPressed: () => _decrementQuantity(uniqueKey),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+                  onPressed: () => _decrementQuantity(uniqueKey),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
 }

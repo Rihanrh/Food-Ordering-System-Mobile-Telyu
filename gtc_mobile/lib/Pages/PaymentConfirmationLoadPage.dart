@@ -24,12 +24,12 @@ class _PaymentConfirmationLoadPageState extends State<PaymentConfirmationLoadPag
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Pesananmu akan diproses setelah pembayaranmu terverifikasi', // Add your text here
+                  'Pesananmu akan diproses setelah pembayaranmu terverifikasi',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     color : Color.fromRGBO(126, 0, 0,1),
-                    fontSize: 18, // Adjust font size as needed
-                    fontWeight: FontWeight.bold, // Adjust font weight as needed
+                    fontSize: 18, 
+                    fontWeight: FontWeight.bold, 
                   ),
                 ),
               ),
@@ -44,7 +44,7 @@ class _PaymentConfirmationLoadPageState extends State<PaymentConfirmationLoadPag
               ),
             ),
           ),
-          SizedBox(height: 20), // Spacer
+          SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(

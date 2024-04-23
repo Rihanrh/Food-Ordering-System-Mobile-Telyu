@@ -9,11 +9,11 @@ class CheckoutModal {
 
   static void show(BuildContext context) {
     showModalBottomSheet<dynamic>(
-      isScrollControlled: true, // Set to true to make it not full screen
+      isScrollControlled: true, 
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.9, // Set height to a fraction of the screen height
+          height: MediaQuery.of(context).size.height * 0.9, 
           child: CheckoutModalWidget(),
         );
       },
@@ -27,9 +27,9 @@ class CheckoutModalWidget extends StatefulWidget {
 }
 
 class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
-  String _paymentMethod = 'Tunai'; // Default payment method
-  String _catatan = ''; // Default catatan
-  String _tempCatatan = ''; // Temporary catatan
+  String _paymentMethod = 'Tunai'; 
+  String _catatan = ''; 
+  String _tempCatatan = ''; 
   int? _selectedMejaNumber = 1;
   int? _temptSelectedMejaNumber;
 
@@ -78,7 +78,7 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                         decoration: BoxDecoration(
                           color: Color.fromRGBO(126, 0, 0, 1),
                           borderRadius: BorderRadius.circular(
-                              10), // Adjust the value as needed
+                              10), 
                         ),
                         alignment: Alignment.center,
                         child: Text(
@@ -308,7 +308,7 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                                         TextFormField(
                                           onChanged: (value) {
                                             _tempCatatan =
-                                                value; // Update temporary variable
+                                                value; 
                                           },
                                           initialValue: _tempCatatan,
                                           decoration: InputDecoration(
@@ -328,7 +328,7 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                                         onPressed: () {
                                           setState(() {
                                             _catatan =
-                                                _tempCatatan; // Assign tempCatatan to _catatan
+                                                _tempCatatan;
                                           });
                                           print('Inputted Catatan: $_catatan');
                                           Navigator.of(context).pop();
@@ -546,9 +546,9 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
-                    // Wrap the button with SizedBox to control its width
+
                     width: double
-                        .infinity, // Set width to infinity to make it as wide as possible
+                        .infinity, 
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -590,9 +590,9 @@ Future<void> _showSelectTableDialog(BuildContext context) async {
   await showDialog(
     context: context,
     builder: (context) => SelectTableWidget(onTableSelected: (selectedTable) {
-      // Do something with the selected table, e.g., update UI, call APIs, etc.
+
       print('Selected Table: $selectedTable');
-      Navigator.pop(context); // Close the dialog
+      Navigator.pop(context); 
     }),
   );
 }
