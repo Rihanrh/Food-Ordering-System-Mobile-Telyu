@@ -76,13 +76,6 @@ class SedangBerlangsungPesananWidget extends StatelessWidget {
                                         fontWeight: FontWeight.w500,
                                         color: Color.fromRGBO(113, 0, 0, 0.5)),
                                   ),
-                                  // Text(
-                                  //   'Rp45.000',
-                                  //   style: GoogleFonts.poppins(
-                                  //       fontSize: 13,
-                                  //       fontWeight: FontWeight.w600,
-                                  //       color: Color.fromRGBO(126, 0, 0, 1)),
-                                  // ),
                                 ],
                               ),
                             ),

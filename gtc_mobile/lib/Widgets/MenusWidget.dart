@@ -109,7 +109,7 @@ class _MenusWidgetState extends State<MenusWidget> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.asset(
-                'assets/tenantListImages/$index.jpg',
+                'assets/tenantListImages/1.jpg',
                 height: 100,
                 width: 100,
               ),
@@ -121,7 +121,7 @@ class _MenusWidgetState extends State<MenusWidget> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 5, top: 30),
                 child: Text(
-                  "Nama Menu",
+                  "Nasi Goreng",
                   style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -132,7 +132,7 @@ class _MenusWidgetState extends State<MenusWidget> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 5),
                 child: Text(
-                  "Rp99,000",
+                  "Rp30,000",
                   style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.normal,
