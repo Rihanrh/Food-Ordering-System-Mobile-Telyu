@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'Pages/LandPage.dart';
 import 'Widgets/BottomNavBarWidget.dart' as BottomNavBarWidget;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
-void main() {
+void main() async{
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
