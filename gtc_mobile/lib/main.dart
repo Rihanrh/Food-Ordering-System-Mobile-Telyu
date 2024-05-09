@@ -1,12 +1,42 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-
 import 'Pages/LandPage.dart';
 import 'Widgets/BottomNavBarWidget.dart' as BottomNavBarWidget;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gtc_mobile/Services/pembeli_service.dart';
+import 'package:gtc_mobile/Models/pembeli_model.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 
-void main() async{
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
+
+  // Get the device ID
+  final deviceInfo = DeviceInfoPlugin();
+  String? deviceId;
+
+  if (Platform.isAndroid) {
+    final androidInfo = await deviceInfo.androidInfo;
+    deviceId = androidInfo.id;
+  } else if (Platform.isIOS) {
+    final iosInfo = await deviceInfo.iosInfo;
+    deviceId = iosInfo.identifierForVendor;
+  }
+
+  // Check if the device ID already exists in the database
+  final existingPembeli = await AkunPembeliService.getPembeli(deviceId!);
+
+  if (existingPembeli == null) {
+    // No record found, create a new one
+    final newPembeli = await AkunPembeliService.createPembeli(deviceId!);
+    // Use newPembeli.id as idPembeli when creating new orders
+    debugPrint('New pembeli created: ${newPembeli.id}');
+  } else {
+    // Use existingPembeli.id as idPembeli when creating new orders
+    debugPrint('Existing pembeli found: ${existingPembeli.id}');
+  }
+
   runApp(const MyApp());
 }
 
