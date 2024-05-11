@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gtc_mobile/Models/tenant_menu_model.dart';
+import 'package:gtc_mobile/Models/TenantMenuModel.dart';
 import '../Pages/MenusPage.dart';
-import 'package:gtc_mobile/Services/tenant_service.dart';
-import 'package:gtc_mobile/Models/tenant_model.dart';
+import 'package:gtc_mobile/Services/TenantService.dart';
+import 'package:gtc_mobile/Models/TenantModel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TenantListWidget extends StatefulWidget {
@@ -13,8 +13,6 @@ class TenantListWidget extends StatefulWidget {
 
 class _TenantListWidgetState extends State<TenantListWidget> {
   Future<List<TenantModel>>? _futureTenantList;
-  Future<List<TenantMenuModel>>? _futureTenantMenuList;
-  // final TenantService _tenantService = TenantService();
   List<Map<String, dynamic>> tenantList = [];
 
   int _pageSize = 3;

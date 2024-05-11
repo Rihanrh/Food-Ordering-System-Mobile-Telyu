@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:gtc_mobile/Models/pembeli_model.dart';
+import 'package:gtc_mobile/Models/PembeliModel.dart';
 
 class AkunPembeliService {
   static final Dio _dio = Dio();
@@ -14,15 +14,13 @@ class AkunPembeliService {
       if (response.statusCode == 200) {
         return PembeliModel.fromJson(response.data);
       } else if (response.statusCode == 404) {
-        // Handle not found scenario: return null
         return null;
       } else {
         throw Exception(
             'Failed to get pembeli (Status Code: ${response.statusCode})');
       }
     } catch (e) {
-      debugPrint(e.toString()); // Optional: Log the actual error for debugging
-      // Don't throw an exception here if you've handled specific cases before
+      debugPrint(e.toString());
       return null;
     }
   }

@@ -2,8 +2,8 @@ import 'dart:math';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gtc_mobile/Models/tenant_model.dart';
-import 'package:gtc_mobile/Models/tenant_menu_model.dart';
+import 'package:gtc_mobile/Models/TenantModel.dart';
+import 'package:gtc_mobile/Models/TenantMenuModel.dart';
 import 'dart:convert';
 
 class TenantService {
