@@ -23,16 +23,46 @@ class TenantService {
     }
   }
 
-  static Future<List<TenantMenuModel>> getTenantMenuList(String nama_tenant) async{
-    try{
-      final response = await _dio.get(url + "/api/getMenuByTenant/" + nama_tenant);
+  static Future<TenantModel> getTenant(int idTenant) async {
+    try {
+      final response = await _dio.get(url + "/api/tenants/$idTenant");
+      debugPrint(url);
+      debugPrint(response.toString());
+      final dynamic data = response.data;
+      return TenantModel.fromJson(data);
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception('Failed to load tenant by id');
+    }
+  }
+
+  static Future<List<TenantMenuModel>> getTenantMenuList(int tenantId) async {
+    try {
+      final response = await _dio.get(url + "/api/getMenuByTenant/$tenantId");
       debugPrint(url);
       debugPrint(response.toString());
       final List<dynamic> data = response.data;
-      return data.map((tenantMenu) => TenantMenuModel.fromJson(tenantMenu)).toList();
-    } catch(e){
+      return data
+          .map((tenantMenu) => TenantMenuModel.fromJson(tenantMenu))
+          .toList();
+    } catch (e) {
       debugPrint(e.toString());
       throw Exception('Failed to load tenant menu');
+    }
+  }
+
+  static Future<TenantMenuModel> getTenantMenuById(
+      int idTenant, int idMenu) async {
+    try {
+      final response =
+          await _dio.get(url + "/api/getMenuById/$idTenant/$idMenu");
+      debugPrint(url);
+      debugPrint(response.toString());
+      final dynamic data = response.data;
+      return TenantMenuModel.fromJson(data);
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception('Failed to load tenant menu by id');
     }
   }
 }

@@ -181,23 +181,6 @@ class _TenantListWidgetState extends State<TenantListWidget> {
       ],
     );
   }
-
-  // Future<List<Map<String, dynamic>>> _loadTenantData() async {
-  //   final tenantNames = await TenantService.fetchTenantList();
-
-  //   List<Map<String, dynamic>> tenantData = [];
-  //   for (var tenant in tenantNames) {
-  //     final menuData = await TenantService.fetchMenuByTenant(tenant['namaTenant']);
-  //     tenantData.add({
-  //       'namaTenant': menuData['namaTenant'],
-  //       'profileTenant': menuData['fotoProduk'] ?? '', // Use null-aware operator to handle null values
-  //       'namaProduk': menuData['namaProduk'] ?? '', // Add this line
-  //       'hargaProduk': menuData['hargaProduk'] ?? '', // Add this line
-  //     });
-  //   }
-
-  //   return tenantData;
-  // }
 }
 
 class TenantProfileCard extends StatefulWidget {
@@ -215,16 +198,16 @@ class TenantProfileCard extends StatefulWidget {
 class _TenantProfileCardState extends State<TenantProfileCard> {
   Future<List<TenantMenuModel>>? _futureTenantMenuList;
 
-  void loadTenantMenuList(String nama_tenant) {
+  void loadTenantMenuList(int idTenant) {
     setState(() {
-      _futureTenantMenuList = TenantService.getTenantMenuList(nama_tenant);
+      _futureTenantMenuList = TenantService.getTenantMenuList(idTenant);
     });
   }
 
   @override
   void initState(){
     super.initState();
-    loadTenantMenuList(widget.tenant.nama_tenant);
+    loadTenantMenuList(widget.tenant.id);
   }
 
   @override
@@ -254,7 +237,7 @@ class _TenantProfileCardState extends State<TenantProfileCard> {
                   );
                 } else if (snapshot.hasError) {
                   return Center(child: TextButton(
-                    onPressed: () => loadTenantMenuList(widget.tenant.nama_tenant),
+                    onPressed: () => loadTenantMenuList(widget.tenant.id),
                     child: Text('Error: ${snapshot.error}'),
                   ));
                 } else {

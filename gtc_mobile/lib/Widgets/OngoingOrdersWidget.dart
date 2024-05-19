@@ -32,13 +32,13 @@ class OngoingOrdersWidget extends StatelessWidget {
           child: Row(
             children: [
               GestureDetector(
-                onTap: (){
-                                   Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                OngoingOrderDetailPage.OngoingOrderDetailPage()),
-                      );
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            OngoingOrderDetailPage.OngoingOrderDetailPage()),
+                  );
                 },
                 child: Container(
                   margin: EdgeInsets.all(25),
@@ -250,8 +250,8 @@ class OngoingOrdersWidget extends StatelessWidget {
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                               Color.fromRGBO(219, 219, 219, 1)),
-                          shape: MaterialStateProperty.all<
-                              RoundedRectangleBorder>(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),

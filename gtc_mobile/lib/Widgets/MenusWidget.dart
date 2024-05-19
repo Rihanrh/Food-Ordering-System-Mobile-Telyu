@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gtc_mobile/Models/TenantMenuModel.dart';
+import 'package:gtc_mobile/Services/CartService.dart';
 import 'package:gtc_mobile/Services/TenantService.dart';
 import 'package:gtc_mobile/Models/TenantModel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gtc_mobile/Models/CartItemModel.dart';
+import 'package:gtc_mobile/Services/DatabaseHelper.dart';
 
 class MenusWidget extends StatefulWidget {
   @override
@@ -109,16 +112,16 @@ class TenantMenuCard extends StatefulWidget {
 class _TenantMenuCardState extends State<TenantMenuCard> {
   Future<List<TenantMenuModel>>? _futureTenantMenuList;
 
-  void loadTenantMenuList(String nama_tenant) {
+  void loadTenantMenuList(int tenantId) {
     setState(() {
-      _futureTenantMenuList = TenantService.getTenantMenuList(nama_tenant);
+      _futureTenantMenuList = TenantService.getTenantMenuList(tenantId);
     });
   }
 
   @override
   void initState() {
     super.initState();
-    loadTenantMenuList(widget.tenant.nama_tenant);
+    loadTenantMenuList(widget.tenant.id);
   }
 
   @override
@@ -166,7 +169,8 @@ class _TenantMenuCardState extends State<TenantMenuCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(left: 10, right: 5, top: 30),
+                            padding:
+                                EdgeInsets.only(left: 10, right: 5, top: 30),
                             child: Text(
                               item.namaProduk,
                               style: GoogleFonts.poppins(
@@ -187,29 +191,9 @@ class _TenantMenuCardState extends State<TenantMenuCard> {
                               ),
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.add_circle_outline,
-                                    color: Color.fromRGBO(211, 36, 43, 1)),
-                                onPressed: () {},
-                              ),
-                              Text(
-                                "0",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.remove_circle_outline,
-                                  color: Color.fromRGBO(211, 36, 43, 1),
-                                ),
-                                onPressed: () {},
-                              ),
-                            ],
+                          CartItemCount(
+                            tenant: widget.tenant,
+                            menu: item,
                           ),
                         ],
                       ),
@@ -228,3 +212,98 @@ class _TenantMenuCardState extends State<TenantMenuCard> {
     );
   }
 }
+
+class CartItemCount extends StatefulWidget {
+  final TenantModel tenant;
+  final TenantMenuModel menu;
+
+  const CartItemCount({
+    super.key,
+    required this.tenant,
+    required this.menu,
+  });
+
+  @override
+  State<CartItemCount> createState() => _CartItemCountState();
+}
+
+class _CartItemCountState extends State<CartItemCount> {
+  int quantity = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _getQuantityFromDatabase();
+  }
+
+  Future<void> _getQuantityFromDatabase() async {
+    final db = await DatabaseHelper.instance.database;
+    final maps = await db.query(
+      'cart_items',
+      where: 'idTenant = ? AND idMenu = ?',
+      whereArgs: [widget.tenant.id, widget.menu.id],
+    );
+    if (maps.isNotEmpty) {
+      setState(() {
+        quantity = maps.first['quantity'] as int;
+      });
+    }
+  }
+
+  Future<void> addToCart() async {
+    final cartService = CartService();
+    final cartItem = CartItemModel(
+      id: null,
+      idTenant: widget.tenant.id,
+      idMenu: widget.menu.id,
+      quantity: 1,
+      harga: int.parse(widget.menu.hargaProduk),
+    );
+    cartService.addToCart(cartItem);
+    await _getQuantityFromDatabase();
+  }
+
+  Future<void> removeFromCart() async {
+    final cartService = CartService();
+    final cartItem = CartItemModel(
+      idTenant: widget.tenant.id,
+      idMenu: widget.menu.id,
+      quantity: 1,
+      harga: int.parse(widget.menu.hargaProduk),
+    );
+    cartService.removeFromCart(cartItem);
+    // Update quantity directly in the state
+    if (quantity > 0) {
+      setState(() {
+        quantity--;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          icon: Icon(Icons.add_circle_outline,
+              color: Color.fromRGBO(211, 36, 43, 1)),
+          onPressed: addToCart,
+        ),
+        Text(
+          quantity.toString(),
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.remove_circle_outline,
+              color: Color.fromRGBO(211, 36, 43, 1)),
+          onPressed: removeFromCart,
+        ),
+      ],
+    );
+  }
+}
+

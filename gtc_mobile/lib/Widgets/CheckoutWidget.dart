@@ -1,19 +1,28 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gtc_mobile/Services/CartService.dart';
 import 'SelectTable.dart';
 import '../Pages/PaymentConfirmationLoadPage.dart';
+import 'package:gtc_mobile/Models/CartItemModel.dart';
+import 'package:gtc_mobile/Services/DatabaseHelper.dart';
+import 'package:gtc_mobile/Models/TenantModel.dart';
+import 'package:gtc_mobile/Models/TenantMenuModel.dart';
+import 'package:gtc_mobile/Services/TenantService.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gtc_mobile/Widgets/MenusWidget.dart';
 
 class CheckoutModal {
   static final _controller = ValueNotifier<bool>(false);
 
   static void show(BuildContext context) {
     showModalBottomSheet<dynamic>(
-      isScrollControlled: true, 
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.9, 
+          height: MediaQuery.of(context).size.height * 0.9,
           child: CheckoutModalWidget(),
         );
       },
@@ -27,9 +36,11 @@ class CheckoutModalWidget extends StatefulWidget {
 }
 
 class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
-  String _paymentMethod = 'Tunai'; 
-  String _catatan = ''; 
-  String _tempCatatan = ''; 
+  late Future<List<CartItemModel>> _futureCartItems;
+
+  String _paymentMethod = 'Tunai';
+  String _catatan = '';
+  String _tempCatatan = '';
   int? _selectedMejaNumber = 1;
   int? _temptSelectedMejaNumber;
 
@@ -37,6 +48,165 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
     setState(() {
       _paymentMethod = value;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureCartItems = _getCartItems();
+  }
+
+  Future<List<CartItemModel>> _getCartItems() async {
+    final List<Map<String, dynamic>> cartItemsMaps =
+        await DatabaseHelper.instance.queryCartItems();
+    final List<CartItemModel> cartItems =
+        cartItemsMaps.map((map) => CartItemModel.fromJson(map)).toList();
+    return cartItems;
+  }
+
+  void _refreshCartItems() {
+    setState(() {
+      _futureCartItems = _getCartItems();
+    });
+  }
+
+  Future<TenantMenuModel> _getTenantMenu(int idTenant, int idMenu) async {
+    return await TenantService.getTenantMenuById(idTenant, idMenu);
+  }
+
+  Widget _buildCartItemList() {
+    return FutureBuilder<List<CartItemModel>>(
+      future: _futureCartItems,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {
+          return SizedBox(
+            height: 100,
+            child: ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final cartItem = snapshot.data![index];
+                return FutureBuilder<TenantMenuModel>(
+                  future: _getTenantMenu(cartItem.idTenant, cartItem.idMenu),
+                  builder: (context, tenantMenuSnapshot) {
+                    if (tenantMenuSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (tenantMenuSnapshot.hasError) {
+                      return Text('Error: ${tenantMenuSnapshot.error}');
+                    } else if (tenantMenuSnapshot.hasData) {
+                      final tenantMenu = tenantMenuSnapshot.data!;
+                      return FutureBuilder<TenantModel>(
+                        future: TenantService.getTenant(cartItem.idTenant),
+                        builder: (context, tenantSnapshot) {
+                          if (tenantSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (tenantSnapshot.hasError) {
+                            return Text('Error: ${tenantSnapshot.error}');
+                          } else if (tenantSnapshot.hasData) {
+                            final tenant = tenantSnapshot.data!;
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          tenantMenu.namaProduk,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color:
+                                                Color.fromRGBO(51, 51, 51, 1),
+                                          ),
+                                        ),
+                                        Text(
+                                          'Rp. ${tenantMenu.hargaProduk}',
+                                          style: GoogleFonts.poppins(
+                                            color:
+                                                Color.fromRGBO(183, 73, 73, 1),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Quantity: ${cartItem.quantity}',
+                                          style: GoogleFonts.poppins(
+                                            color:
+                                                Color.fromRGBO(183, 73, 73, 1),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Spacer(),
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  margin: EdgeInsets.only(right: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          dotenv.env['API_URL']! +
+                                              "/file/" +
+                                              tenantMenu.fotoProduk),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.add_circle_outline,
+                                          color:
+                                              Color.fromRGBO(211, 36, 43, 1)),
+                                      onPressed: () async {
+                                        await CartHelper.addToCart(tenant,
+                                            tenantMenu, _refreshCartItems);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.remove_circle_outline,
+                                          color:
+                                              Color.fromRGBO(211, 36, 43, 1)),
+                                      onPressed: () async {
+                                        await CartHelper.removeFromCart(tenant,
+                                            tenantMenu, _refreshCartItems);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        },
+                      );
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                );
+              },
+            ),
+          );
+        } else {
+          return Center(child: Text('No data available'));
+        }
+      },
+    );
   }
 
   @override
@@ -77,8 +247,7 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                         height: 35,
                         decoration: BoxDecoration(
                           color: Color.fromRGBO(126, 0, 0, 1),
-                          borderRadius: BorderRadius.circular(
-                              10), 
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         alignment: Alignment.center,
                         child: Text(
@@ -142,8 +311,9 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                                         _temptSelectedMejaNumber = newValue;
                                       });
                                     },
-                                    items: List.generate(25, (index) => index + 1)
-                                        .map((int value) {
+                                    items:
+                                        List.generate(25, (index) => index + 1)
+                                            .map((int value) {
                                       return DropdownMenuItem<int>(
                                         value: value,
                                         child: Text('$value'),
@@ -206,165 +376,17 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                   height: 1,
                 ),
                 SizedBox(height: 10),
+                _buildCartItemList(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Nasi Goreng',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromRGBO(51, 51, 51, 1),
-                              ),
-                            ),
-                            Text(
-                              'Rp. 25.000',
-                              style: GoogleFonts.poppins(
-                                color: Color.fromRGBO(183, 73, 73, 1),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10.0),
-                              child: Text(
-                                'Catatan : $_catatan',
-                                style: GoogleFonts.poppins(
-                                  color: Color.fromRGBO(51, 51, 51, 1),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Spacer(),
-                    Container(
-                      width: 60,
-                      height: 60,
-                      margin: EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: AssetImage('assets/tenantListImages/1.jpg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext Context) {
-                                  return AlertDialog(
-                                    title: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        IconButton(
-                                          icon: Icon(Icons.cancel_outlined),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        Center(
-                                          child: Text(
-                                            'Catatan',
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Color.fromRGBO(126, 0, 0, 1),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Opsional',
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 10)),
-                                        SizedBox(height: 13),
-                                        TextFormField(
-                                          onChanged: (value) {
-                                            _tempCatatan =
-                                                value; 
-                                          },
-                                          initialValue: _tempCatatan,
-                                          decoration: InputDecoration(
-                                            prefixIcon: Icon(Icons.event_note),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                            ),
-                                            hintText:
-                                                'Contoh: Jangan pakai sayur',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _catatan =
-                                                _tempCatatan;
-                                          });
-                                          print('Inputted Catatan: $_catatan');
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('OK'),
-                                      ),
-                                    ],
-                                  );
-                                });
-                          },
-                          child: Text(
-                            'Catatan',
-                            style: GoogleFonts.poppins(
-                              color: Color.fromRGBO(177, 27, 27, 1),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.white),
-                            shape:
-                                MaterialStateProperty.all(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: BorderSide(
-                                  color: Color.fromRGBO(177, 27, 27, 1)),
-                            )),
-                          ),
-                        ),
-                      ),
-                    ),
                     AdvancedSwitch(
                       controller: CheckoutModal._controller,
                       enabled: true,
                       height: 35,
                       width: 150,
-                      borderRadius: const BorderRadius.all(Radius.circular(120)),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(120)),
                       inactiveColor: Colors.grey,
                       activeColor: Color.fromRGBO(202, 37, 37, 1),
                       inactiveChild: Text(
@@ -383,25 +405,6 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                           color: Colors.white,
                         ),
                       ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.remove_circle_outline,
-                        color: Color.fromRGBO(211, 36, 43, 1),
-                      ),
-                      onPressed: () {},
-                    ),
-                    Text(
-                      '1',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.add_circle_outline,
-                          color: Color.fromRGBO(211, 36, 43, 1)),
-                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -480,52 +483,6 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                   children: [
                     ListTile(
                       title: Text(
-                        'Rincian Pembayaran',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(126, 0, 0, 1),
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Nasi Goreng',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(51, 51, 51, 1),
-                        ),
-                      ),
-                      trailing: Text(
-                        '28000',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(51, 51, 51, 1),
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Nasi Goreng',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(51, 51, 51, 1),
-                        ),
-                      ),
-                      trailing: Text(
-                        '28000',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(51, 51, 51, 1),
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      title: Text(
                         'Total Pembayaran',
                         style: GoogleFonts.poppins(
                             fontSize: 16,
@@ -546,9 +503,7 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
-
-                    width: double
-                        .infinity, 
+                    width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -562,7 +517,8 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                         backgroundColor: MaterialStateProperty.all(
                           Color.fromRGBO(211, 36, 43, 1),
                         ),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
@@ -590,9 +546,37 @@ Future<void> _showSelectTableDialog(BuildContext context) async {
   await showDialog(
     context: context,
     builder: (context) => SelectTableWidget(onTableSelected: (selectedTable) {
-
       print('Selected Table: $selectedTable');
-      Navigator.pop(context); 
+      Navigator.pop(context);
     }),
   );
+}
+
+class CartHelper {
+  static Future<void> addToCart(
+      TenantModel tenant, TenantMenuModel menu, void Function() refreshCartItems) async {
+    final cartService = CartService();
+    final cartItem = CartItemModel(
+      id: null, // Assuming auto-increment for ID
+      idTenant: tenant.id,
+      idMenu: menu.id,
+      quantity: 1,
+      harga: int.parse(menu.hargaProduk),
+    );
+    cartService.addToCart(cartItem);
+    refreshCartItems(); // Call the refresh method after adding to cart
+  }
+
+  static Future<void> removeFromCart(
+      TenantModel tenant, TenantMenuModel menu, void Function() refreshCartItems) async {
+    final cartService = CartService();
+    final cartItem = CartItemModel(
+      idTenant: tenant.id,
+      idMenu: menu.id,
+      quantity: 1,
+      harga: int.parse(menu.hargaProduk),
+    );
+    cartService.removeFromCart(cartItem);
+    refreshCartItems(); // Call the refresh method after removing from cart
+  }
 }
