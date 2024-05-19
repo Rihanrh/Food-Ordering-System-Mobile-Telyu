@@ -251,6 +251,39 @@ class _CartItemCountState extends State<CartItemCount> {
   }
 
   Future<void> addToCart() async {
+    final db = await DatabaseHelper.instance.database;
+
+    // Check if there are any items in the cart
+    final existingItems = await db.query('cart_items');
+    if (existingItems.isNotEmpty) {
+      // Get the idTenant of the first item
+      final firstItemTenantId = existingItems.first['idTenant'] as int;
+      // Compare with the current item's idTenant
+      if (firstItemTenantId != widget.tenant.id) {
+        // Show AlertDialog if the tenant ids don't match
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Tidak dapat menambahkan ke keranjang!'),
+              content: Text(
+                  'Anda tidak dapat memesan dari tenant yang berbeda dalam satu pesanan. Silakan hapus semua item dari tenant sebelumnya terlebih dahulu.'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return; // Exit the function early if there's a mismatch
+      }
+    }
+
+    // If no mismatch found, proceed with adding the item to the cart
     final cartService = CartService();
     final cartItem = CartItemModel(
       id: null,
@@ -272,7 +305,6 @@ class _CartItemCountState extends State<CartItemCount> {
       harga: int.parse(widget.menu.hargaProduk),
     );
     cartService.removeFromCart(cartItem);
-    // Update quantity directly in the state
     if (quantity > 0) {
       setState(() {
         quantity--;
@@ -306,4 +338,3 @@ class _CartItemCountState extends State<CartItemCount> {
     );
   }
 }
-
