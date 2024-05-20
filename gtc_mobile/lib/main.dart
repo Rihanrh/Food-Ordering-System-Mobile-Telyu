@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'Pages/LandPage.dart';
 import 'Widgets/BottomNavBarWidget.dart' as BottomNavBarWidget;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gtc_mobile/Services/AkunPembeliService.dart';
-import 'package:gtc_mobile/Models/PembeliModel.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-
+import 'package:gtc_mobile/Services/DatabaseHelper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,17 +38,42 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    DatabaseHelper.instance.dispose(); // Ensure database is disposed
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.detached) {
+      DatabaseHelper.instance.dispose();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kantin Telyu',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Color.fromRGBO(211, 36, 43, 1)
+        primaryColor: const Color.fromRGBO(211, 36, 43, 1),
       ),
-      
       home: BottomNavBarWidget.BottomNavigationBar(),
     );
   }

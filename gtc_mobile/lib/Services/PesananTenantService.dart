@@ -7,7 +7,8 @@ class PesananTenantsService {
   static final Dio _dio = Dio();
   static final String url = dotenv.env['API_URL']!;
 
-  static Future<PesananTenantModel> createPesanan(PesananTenantModel pesananTenant) async {
+  static Future<PesananTenantModel> createPesanan(
+      PesananTenantModel pesananTenant) async {
     try {
       final response = await _dio.post(
         '$url/api/pesanan',
@@ -17,10 +18,25 @@ class PesananTenantsService {
       if (response.statusCode == 201) {
         return PesananTenantModel.fromJson(response.data);
       } else {
-        throw Exception('Failed to create pesanan: ${response.statusCode} ${response.statusMessage}');
+        throw Exception(
+            'Failed to create pesanan: ${response.statusCode} ${response.statusMessage}');
       }
     } catch (e) {
       debugPrint('Error creating pesanan: $e');
+      rethrow;
+    }
+  }
+
+  static Future<int?> getMaxIdPesanan() async {
+    try {
+      final response = await _dio.get('$url/api/pesanan/max-id-pesanan');
+      if (response.statusCode == 200 && response.data != null) {
+        return response.data['idPesanan'] as int?;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Error getting max idPesanan: $e');
       rethrow;
     }
   }

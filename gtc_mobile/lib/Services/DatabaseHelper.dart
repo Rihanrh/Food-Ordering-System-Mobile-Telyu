@@ -5,10 +5,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:gtc_mobile/Models/CartItemModel.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper instance = DatabaseHelper._init();
+  static final DatabaseHelper instance = DatabaseHelper._internal();
+
   static Database? _database;
 
-  DatabaseHelper._init();
+  DatabaseHelper._internal();
+
+  factory DatabaseHelper() => instance;
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -71,5 +74,31 @@ class DatabaseHelper {
   Future close() async {
     final db = await instance.database;
     db.close();
+  }
+
+  Future<CartItemModel?> queryCartItemByIds(int idTenant, int idMenu) async {
+    final db = await instance.database;
+    final result = await db.query(
+      'cart_items',
+      where: 'idTenant = ? AND idMenu = ?',
+      whereArgs: [idTenant, idMenu],
+    );
+
+    if (result.isNotEmpty) {
+      return CartItemModel.fromJson(result.first);
+    }
+
+    return null;
+  }
+
+  Future<void> dispose() async {
+    final db = await instance.database;
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, 'cart.db');
+    if (await File(path).exists()) {
+      await db.close();
+      await deleteDatabase(path);
+      _database = null;
+    }
   }
 }

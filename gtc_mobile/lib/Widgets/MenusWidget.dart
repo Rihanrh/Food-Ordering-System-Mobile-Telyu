@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gtc_mobile/Models/TenantMenuModel.dart';
-import 'package:gtc_mobile/Services/CartService.dart';
 import 'package:gtc_mobile/Services/TenantService.dart';
 import 'package:gtc_mobile/Models/TenantModel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -284,32 +283,45 @@ class _CartItemCountState extends State<CartItemCount> {
     }
 
     // If no mismatch found, proceed with adding the item to the cart
-    final cartService = CartService();
-    final cartItem = CartItemModel(
-      id: null,
-      idTenant: widget.tenant.id,
-      idMenu: widget.menu.id,
-      quantity: 1,
-      harga: int.parse(widget.menu.hargaProduk),
-    );
-    cartService.addToCart(cartItem);
+    final existingCartItem = await DatabaseHelper.instance
+        .queryCartItemByIds(widget.tenant.id, widget.menu.id);
+
+    if (existingCartItem != null) {
+      // If the cart item already exists, update its quantity
+      existingCartItem.quantity++;
+      await DatabaseHelper.instance.updateCartItem(existingCartItem);
+    } else {
+      // If the cart item doesn't exist, create a new one
+      final cartItem = CartItemModel(
+        id: null,
+        idTenant: widget.tenant.id,
+        idMenu: widget.menu.id,
+        quantity: 1,
+        harga: int.parse(widget.menu.hargaProduk),
+      );
+      await DatabaseHelper.instance.insertCartItem(cartItem);
+    }
+
     await _getQuantityFromDatabase();
   }
 
   Future<void> removeFromCart() async {
-    final cartService = CartService();
-    final cartItem = CartItemModel(
-      idTenant: widget.tenant.id,
-      idMenu: widget.menu.id,
-      quantity: 1,
-      harga: int.parse(widget.menu.hargaProduk),
-    );
-    cartService.removeFromCart(cartItem);
-    if (quantity > 0) {
-      setState(() {
-        quantity--;
-      });
+    final existingCartItem = await DatabaseHelper.instance
+        .queryCartItemByIds(widget.tenant.id, widget.menu.id);
+
+    if (existingCartItem != null) {
+      if (existingCartItem.quantity > 1) {
+        // If the quantity is greater than 1, decrement it
+        existingCartItem.quantity--;
+        await DatabaseHelper.instance.updateCartItem(existingCartItem);
+      } else {
+        // If the quantity is 1, remove the cart item
+        await DatabaseHelper.instance
+            .deleteCartItem(widget.tenant.id, widget.menu.id);
+      }
     }
+
+    await _getQuantityFromDatabase();
   }
 
   @override

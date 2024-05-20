@@ -1,8 +1,9 @@
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gtc_mobile/Services/CartService.dart';
+import 'package:gtc_mobile/Services/AkunPembeliService.dart';
 import 'SelectTable.dart';
 import '../Pages/PaymentConfirmationLoadPage.dart';
 import 'package:gtc_mobile/Models/CartItemModel.dart';
@@ -11,7 +12,9 @@ import 'package:gtc_mobile/Models/TenantModel.dart';
 import 'package:gtc_mobile/Models/TenantMenuModel.dart';
 import 'package:gtc_mobile/Services/TenantService.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:gtc_mobile/Widgets/MenusWidget.dart';
+import 'package:gtc_mobile/Models/PesananTenantModel.dart';
+import 'package:gtc_mobile/Services/PesananTenantService.dart';
+import 'package:gtc_mobile/Services/AkunPembeliService.dart';
 
 class CheckoutModal {
   static final _controller = ValueNotifier<bool>(false);
@@ -36,13 +39,14 @@ class CheckoutModalWidget extends StatefulWidget {
 }
 
 class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
+  int? _idPembeli;
+
   late Future<List<CartItemModel>> _futureCartItems;
 
   String _paymentMethod = 'Tunai';
-  String _catatan = '';
-  String _tempCatatan = '';
   int? _selectedMejaNumber = 1;
   int? _temptSelectedMejaNumber;
+  String _consumptionOption = "Dibungkus";
 
   void _handlePaymentMethodChange(String value) {
     setState(() {
@@ -54,6 +58,45 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
   void initState() {
     super.initState();
     _futureCartItems = _getCartItems();
+    _getIdPembeli();
+
+    CheckoutModal._controller.addListener(() {
+      if (mounted) {
+        setState(() {
+          _consumptionOption =
+              CheckoutModal._controller.value ? "Makan di Tempat" : "Dibungkus";
+        });
+      }
+    });
+  }
+
+  Future<void> _getIdPembeli() async {
+    final deviceInfo = DeviceInfoPlugin();
+    String? deviceId;
+
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      deviceId = androidInfo.id;
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfo.iosInfo;
+      deviceId = iosInfo.identifierForVendor;
+    }
+
+    try {
+      final existingPembeli = await AkunPembeliService.getPembeli(deviceId!);
+      if (existingPembeli != null) {
+        setState(() {
+          _idPembeli = existingPembeli.id;
+        });
+      } else {
+        final newPembeli = await AkunPembeliService.createPembeli(deviceId!);
+        setState(() {
+          _idPembeli = newPembeli.id;
+        });
+      }
+    } catch (e) {
+      debugPrint('Failed to get or create pembeli: $e');
+    }
   }
 
   Future<List<CartItemModel>> _getCartItems() async {
@@ -505,12 +548,78 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  PaymentConfirmationLoadPage()),
+                      onPressed: () async {
+                        int? maxIdPesanan;
+                        try {
+                          maxIdPesanan =
+                              await PesananTenantsService.getMaxIdPesanan();
+                        } catch (e) {
+                          debugPrint('Failed to get max idPesanan: $e');
+                          return;
+                        }
+
+                        final newIdPesanan =
+                            (maxIdPesanan != null ? maxIdPesanan + 1 : 1);
+                        final cartItems = await _futureCartItems;
+
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Konfirmasi Pesanan"),
+                              content: Text(
+                                  "Apakah Anda yakin ingin melakukan pemesanan? Pastikan pesanan Anda sudah benar."),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text("Batal"),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                ),
+                                ElevatedButton(
+                                  child: Text("Ya"),
+                                  onPressed: () async {
+                                    // Proceed with the order confirmation
+                                    for (final cartItem in cartItems) {
+                                      final pesananTenant = PesananTenantModel(
+                                        id: null,
+                                        idTenant: cartItem.idTenant,
+                                        idMenu: cartItem.idMenu,
+                                        idPesanan: newIdPesanan,
+                                        quantity: cartItem.quantity,
+                                        totalHarga: cartItem.harga,
+                                        metodePembayaran: _paymentMethod,
+                                        statusPesanan:
+                                            'Menunggu Konfirmasi Pembayaran',
+                                        nomorMeja: _selectedMejaNumber!,
+                                        opsiKonsumsi: _consumptionOption,
+                                        queue: null,
+                                        idPembeli: _idPembeli,
+                                      );
+
+                                      try {
+                                        await PesananTenantsService
+                                            .createPesanan(pesananTenant);
+                                      } catch (e) {
+                                        debugPrint(
+                                            'Failed to create pesanan: $e');
+                                      }
+                                    }
+
+                                    // Navigate to the PaymentConfirmationLoadPage
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            PaymentConfirmationLoadPage(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            );
+                          },
                         );
                       },
                       style: ButtonStyle(
@@ -553,30 +662,46 @@ Future<void> _showSelectTableDialog(BuildContext context) async {
 }
 
 class CartHelper {
-  static Future<void> addToCart(
-      TenantModel tenant, TenantMenuModel menu, void Function() refreshCartItems) async {
-    final cartService = CartService();
-    final cartItem = CartItemModel(
-      id: null, // Assuming auto-increment for ID
-      idTenant: tenant.id,
-      idMenu: menu.id,
-      quantity: 1,
-      harga: int.parse(menu.hargaProduk),
-    );
-    cartService.addToCart(cartItem);
-    refreshCartItems(); // Call the refresh method after adding to cart
+  static Future<void> addToCart(TenantModel tenant, TenantMenuModel menu,
+      void Function() refreshCartItems) async {
+    final existingCartItem =
+        await DatabaseHelper.instance.queryCartItemByIds(tenant.id, menu.id);
+
+    if (existingCartItem != null) {
+      // If the cart item already exists, update its quantity
+      existingCartItem.quantity++;
+      await DatabaseHelper.instance.updateCartItem(existingCartItem);
+    } else {
+      // If the cart item doesn't exist, create a new one
+      final cartItem = CartItemModel(
+        id: null,
+        idTenant: tenant.id,
+        idMenu: menu.id,
+        quantity: 1,
+        harga: int.parse(menu.hargaProduk),
+      );
+      await DatabaseHelper.instance.insertCartItem(cartItem);
+    }
+
+    refreshCartItems();
   }
 
-  static Future<void> removeFromCart(
-      TenantModel tenant, TenantMenuModel menu, void Function() refreshCartItems) async {
-    final cartService = CartService();
-    final cartItem = CartItemModel(
-      idTenant: tenant.id,
-      idMenu: menu.id,
-      quantity: 1,
-      harga: int.parse(menu.hargaProduk),
-    );
-    cartService.removeFromCart(cartItem);
-    refreshCartItems(); // Call the refresh method after removing from cart
+  static Future<void> removeFromCart(TenantModel tenant, TenantMenuModel menu,
+      void Function() refreshCartItems) async {
+    final existingCartItem =
+        await DatabaseHelper.instance.queryCartItemByIds(tenant.id, menu.id);
+
+    if (existingCartItem != null) {
+      if (existingCartItem.quantity > 1) {
+        // If the quantity is greater than 1, decrement it
+        existingCartItem.quantity--;
+        await DatabaseHelper.instance.updateCartItem(existingCartItem);
+      } else {
+        // If the quantity is 1, remove the cart item
+        await DatabaseHelper.instance.deleteCartItem(tenant.id, menu.id);
+      }
+    }
+
+    refreshCartItems();
   }
 }
