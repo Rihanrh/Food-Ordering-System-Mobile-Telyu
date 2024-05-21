@@ -34,9 +34,22 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
     if (pembeli == null) {
       return {};
     }
-    final pesananList = await PesananTenantsService.getPesananByIdPembeli(pembeli.id);
-    final nonNullPesananList = pesananList.where((p) => p.idPesanan != null).toList();
-    return groupBy(nonNullPesananList, (PesananTenantModel p) => p.idPesanan!);
+    try {
+      final pesananList =
+          await PesananTenantsService.getPesananByIdPembeli(pembeli.id);
+      final nonNullPesananList =
+          pesananList.where((p) => p.idPesanan != null).toList();
+      return groupBy(
+          nonNullPesananList, (PesananTenantModel p) => p.idPesanan!);
+    } catch (e) {
+      if (e.toString().contains('404')) {
+        // Handle 404 error, return an empty map
+        return {};
+      } else {
+        // Rethrow other errors
+        rethrow;
+      }
+    }
   }
 
   Future<String?> _getDeviceId() async {
@@ -89,6 +102,34 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
+            } else if (snapshot.hasData && snapshot.data!.isEmpty) {
+              return Container(
+                margin: EdgeInsets.all(25),
+                padding: EdgeInsets.all(5),
+                height: 200,
+                width: 390,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 6,
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    'Tidak ada pesanan yang sedang berlangsung!',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Color.fromRGBO(126, 0, 0, 1),
+                    ),
+                  ),
+                ),
+              );
             } else {
               final pesananGrouped = snapshot.data!;
               return SingleChildScrollView(
@@ -97,14 +138,16 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
                   children: pesananGrouped.entries.map((entry) {
                     final idPesanan = entry.key;
                     final pesananList = entry.value;
-                    final totalQuantity = pesananList.fold(0, (sum, item) => sum + item.quantity);
+                    final totalQuantity =
+                        pesananList.fold(0, (sum, item) => sum + item.quantity);
                     final firstPesanan = pesananList.first;
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OngoingOrderDetailPage.OngoingOrderDetailPage()),
+                              builder: (context) => OngoingOrderDetailPage
+                                  .OngoingOrderDetailPage()),
                         );
                       },
                       child: Container(
@@ -126,19 +169,24 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
                         child: FutureBuilder<String>(
                           future: getTenantMenuImageUrl(firstPesanan),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return Center(child: CircularProgressIndicator());
                             } else if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
                             } else {
                               final imageUrl = snapshot.data!;
                               return FutureBuilder<String>(
-                                future: TenantService.getTenantNameById(firstPesanan.idTenant),
+                                future: TenantService.getTenantNameById(
+                                    firstPesanan.idTenant),
                                 builder: (context, snapshotTenantName) {
-                                  if (snapshotTenantName.connectionState == ConnectionState.waiting) {
-                                    return Center(child: CircularProgressIndicator());
+                                  if (snapshotTenantName.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
                                   } else if (snapshotTenantName.hasError) {
-                                    return Text('Error: ${snapshotTenantName.error}');
+                                    return Text(
+                                        'Error: ${snapshotTenantName.error}');
                                   } else {
                                     final tenantName = snapshotTenantName.data!;
                                     return Stack(
@@ -146,52 +194,70 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
                                         Padding(
                                           padding: const EdgeInsets.all(10.0),
                                           child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                 flex: 3,
                                                 child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       'ID Pesanan : $idPesanan',
-                                                      style: GoogleFonts.poppins(
+                                                      style:
+                                                          GoogleFonts.poppins(
                                                         fontSize: 13,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: Color.fromRGBO(126, 0, 0, 1),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Color.fromRGBO(
+                                                            126, 0, 0, 1),
                                                       ),
                                                     ),
                                                     SizedBox(height: 4),
                                                     Text(
-                                                      firstPesanan.statusPesanan,
-                                                      style: GoogleFonts.poppins(
+                                                      firstPesanan
+                                                          .statusPesanan,
+                                                      style:
+                                                          GoogleFonts.poppins(
                                                         fontSize: 13,
-                                                        fontWeight: FontWeight.w700,
-                                                        color: Color.fromRGBO(198, 0, 0, 1),
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Color.fromRGBO(
+                                                            198, 0, 0, 1),
                                                       ),
                                                     ),
                                                     Text(
                                                       tenantName,
-                                                      style: GoogleFonts.poppins(
+                                                      style:
+                                                          GoogleFonts.poppins(
                                                         fontSize: 18,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: Color.fromRGBO(198, 0, 0, 1),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Color.fromRGBO(
+                                                            198, 0, 0, 1),
                                                       ),
                                                     ),
                                                     Text(
                                                       '$totalQuantity Menu',
-                                                      style: GoogleFonts.poppins(
+                                                      style:
+                                                          GoogleFonts.poppins(
                                                         fontSize: 13,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: Color.fromRGBO(126, 0, 0, 1),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Color.fromRGBO(
+                                                            126, 0, 0, 1),
                                                       ),
                                                     ),
                                                     Text(
                                                       'Queue: ${firstPesanan.queue}',
-                                                      style: GoogleFonts.poppins(
+                                                      style:
+                                                          GoogleFonts.poppins(
                                                         fontSize: 13,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: Color.fromRGBO(126, 0, 0, 1),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Color.fromRGBO(
+                                                            126, 0, 0, 1),
                                                       ),
                                                     ),
                                                   ],
@@ -203,7 +269,9 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
                                                   alignment: Alignment.topRight,
                                                   child: Container(
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(10),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                     ),
                                                     child: Image.network(
                                                       imageUrl,
