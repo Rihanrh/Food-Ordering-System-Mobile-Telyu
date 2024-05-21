@@ -36,7 +36,6 @@ class _LandPageState extends State<LandPage> {
                   children: [
                     TenantListWidget(),
                     OngoingOrdersWidget(),
-                    OrdersQueueWidget(),
                   ],
                 ),
               ),

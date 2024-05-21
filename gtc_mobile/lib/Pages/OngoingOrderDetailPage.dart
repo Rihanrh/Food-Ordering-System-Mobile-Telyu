@@ -34,7 +34,7 @@ class _OngoingOrderDetailPageState extends State<OngoingOrderDetailPage> {
             SizedBox(height: 10),
             ListTile(
               title: Text(
-                'Kantin Rasya',
+                'Tenant Dina',
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -80,7 +80,7 @@ class _OngoingOrderDetailPageState extends State<OngoingOrderDetailPage> {
             ),
             ListTile(
               title: Text(
-                'No Antrian : R123',
+                'ID Pesanan : R123',
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -126,42 +126,10 @@ class _OngoingOrderDetailPageState extends State<OngoingOrderDetailPage> {
                 ),
               ),
             ),
-            ListTile(
-              title: Text(
-                'Catatan : Jangan Pakai Sayur',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-              ),
-            ),
             SizedBox(height: 10),
             Divider(
               color: Colors.grey,
               height: 1,
-            ),
-            ListTile(
-              title: Text(
-                'Rincian Pembayaran',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(126, 0, 0, 1),
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text(
-                'Nasi Goreng',
-                style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
-              ),
-              trailing: Text(
-                '54000',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
             ),
             ListTile(
               title: Text(

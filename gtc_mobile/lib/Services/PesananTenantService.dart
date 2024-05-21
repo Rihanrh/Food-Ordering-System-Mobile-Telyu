@@ -40,4 +40,47 @@ class PesananTenantsService {
       rethrow;
     }
   }
+
+  static Future<List<PesananTenantModel>> getPesananByIdPembeli(
+      int idPembeli) async {
+    try {
+      final response = await _dio.get('$url/api/pesanan/pembeli/$idPembeli');
+      if (response.statusCode == 200) {
+        List<PesananTenantModel> pesananList = [];
+        for (var pesananData in response.data) {
+          pesananList.add(PesananTenantModel.fromJson(pesananData));
+        }
+        return pesananList;
+      } else {
+        throw Exception(
+            'Failed to get pesanan by idPembeli: ${response.statusCode} ${response.statusMessage}');
+      }
+    } catch (e) {
+      debugPrint('Error getting pesanan by idPembeli: $e');
+      rethrow;
+    }
+  }
+
+  static Future<Map<int, List<PesananTenantModel>>>
+      getPesananByIdPembeliGrouped(int idPembeli) async {
+    try {
+      final response = await _dio.get('$url/api/pesanan/pembeli/$idPembeli');
+      if (response.statusCode == 200) {
+        Map<int, List<PesananTenantModel>> pesananMap = {};
+        for (var pesananData in response.data) {
+          final pesanan = PesananTenantModel.fromJson(pesananData);
+          final idPesanan = pesanan.idPesanan;
+          pesananMap.putIfAbsent(idPesanan!, () => []);
+          pesananMap[idPesanan]!.add(pesanan);
+        }
+        return pesananMap;
+      } else {
+        throw Exception(
+            'Failed to get pesanan by idPembeli: ${response.statusCode} ${response.statusMessage}');
+      }
+    } catch (e) {
+      debugPrint('Error getting pesanan by idPembeli: $e');
+      rethrow;
+    }
+  }
 }

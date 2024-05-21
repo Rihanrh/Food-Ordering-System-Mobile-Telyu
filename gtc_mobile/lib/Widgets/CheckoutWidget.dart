@@ -40,6 +40,7 @@ class CheckoutModalWidget extends StatefulWidget {
 
 class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
   int? _idPembeli;
+  int _totalPrice = 0;
 
   late Future<List<CartItemModel>> _futureCartItems;
 
@@ -59,6 +60,13 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
     super.initState();
     _futureCartItems = _getCartItems();
     _getIdPembeli();
+    _updateTotalPrice();
+
+    _calculateTotalPrice().then((totalPrice) {
+      setState(() {
+        _totalPrice = totalPrice;
+      });
+    });
 
     CheckoutModal._controller.addListener(() {
       if (mounted) {
@@ -115,6 +123,25 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
 
   Future<TenantMenuModel> _getTenantMenu(int idTenant, int idMenu) async {
     return await TenantService.getTenantMenuById(idTenant, idMenu);
+  }
+
+  Future<int> _calculateTotalPrice() async {
+    final cartItems = await _futureCartItems;
+    int totalPrice = 0;
+
+    for (final cartItem in cartItems) {
+      totalPrice += cartItem.harga * cartItem.quantity;
+    }
+
+    return totalPrice;
+  }
+
+  void _updateTotalPrice() {
+    _calculateTotalPrice().then((totalPrice) {
+      setState(() {
+        _totalPrice = totalPrice;
+      });
+    });
   }
 
   Widget _buildCartItemList() {
@@ -215,8 +242,11 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                                           color:
                                               Color.fromRGBO(211, 36, 43, 1)),
                                       onPressed: () async {
-                                        await CartHelper.addToCart(tenant,
-                                            tenantMenu, _refreshCartItems);
+                                        await CartHelper.addToCart(
+                                            tenant,
+                                            tenantMenu,
+                                            _refreshCartItems,
+                                            _updateTotalPrice);
                                       },
                                     ),
                                     IconButton(
@@ -224,8 +254,11 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                                           color:
                                               Color.fromRGBO(211, 36, 43, 1)),
                                       onPressed: () async {
-                                        await CartHelper.removeFromCart(tenant,
-                                            tenantMenu, _refreshCartItems);
+                                        await CartHelper.removeFromCart(
+                                            tenant,
+                                            tenantMenu,
+                                            _refreshCartItems,
+                                            _updateTotalPrice);
                                       },
                                     ),
                                   ],
@@ -533,7 +566,7 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
                             color: Color.fromRGBO(211, 36, 43, 1)),
                       ),
                       trailing: Text(
-                        '54000',
+                        'Rp $_totalPrice',
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -662,8 +695,11 @@ Future<void> _showSelectTableDialog(BuildContext context) async {
 }
 
 class CartHelper {
-  static Future<void> addToCart(TenantModel tenant, TenantMenuModel menu,
-      void Function() refreshCartItems) async {
+  static Future<void> addToCart(
+      TenantModel tenant,
+      TenantMenuModel menu,
+      void Function() refreshCartItems,
+      void Function() updateTotalPrice) async {
     final existingCartItem =
         await DatabaseHelper.instance.queryCartItemByIds(tenant.id, menu.id);
 
@@ -684,10 +720,14 @@ class CartHelper {
     }
 
     refreshCartItems();
+    updateTotalPrice();
   }
 
-  static Future<void> removeFromCart(TenantModel tenant, TenantMenuModel menu,
-      void Function() refreshCartItems) async {
+  static Future<void> removeFromCart(
+      TenantModel tenant,
+      TenantMenuModel menu,
+      void Function() refreshCartItems,
+      void Function() updateTotalPrice) async {
     final existingCartItem =
         await DatabaseHelper.instance.queryCartItemByIds(tenant.id, menu.id);
 
@@ -703,5 +743,6 @@ class CartHelper {
     }
 
     refreshCartItems();
+    updateTotalPrice();
   }
 }

@@ -77,7 +77,7 @@ class _TenantListWidgetState extends State<TenantListWidget> {
               Padding(
                 padding: EdgeInsets.only(left: 12, top: 10),
                 child: Text(
-                  "Tenant",
+                  "Tenant Kami",
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,

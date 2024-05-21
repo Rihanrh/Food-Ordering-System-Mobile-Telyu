@@ -36,6 +36,16 @@ class TenantService {
     }
   }
 
+  static Future<String> getTenantNameById(int idTenant) async {
+    try {
+      TenantModel tenant = await getTenant(idTenant);
+      return tenant.nama_tenant;
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception('Failed to load tenant name by id');
+    }
+  }
+
   static Future<List<TenantMenuModel>> getTenantMenuList(int tenantId) async {
     try {
       final response = await _dio.get(url + "/api/getMenuByTenant/$tenantId");
