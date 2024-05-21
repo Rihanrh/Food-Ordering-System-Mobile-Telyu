@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gtc_mobile/Models/TenantMenuModel.dart';
+import 'package:gtc_mobile/Services/TenantService.dart';
+import 'package:gtc_mobile/Models/TenantModel.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gtc_mobile/Models/CartItemModel.dart';
+import 'package:gtc_mobile/Services/DatabaseHelper.dart';
 
 class MenusWidget extends StatefulWidget {
   @override
@@ -7,36 +13,18 @@ class MenusWidget extends StatefulWidget {
 }
 
 class _MenusWidgetState extends State<MenusWidget> {
-  Map<String, int> _menuQuantities = {
-    'Rasya': 0,
-    'Madam': 0,
-    'Idon': 0,
-    'Lili': 0,
-  };
+  Future<List<TenantModel>>? _futureTenantList;
 
-List<Map<String, dynamic>> menuItems = [
-  {'name': 'Nasi Goreng', 'imagePath': 'assets/tenantListImages/1.jpg', 'price': 30000},
-  {'name': 'Mi Goreng', 'imagePath': 'assets/tenantListImages/2.jpg', 'price': 25000},
-  {'name': 'Bakso', 'imagePath': 'assets/tenantListImages/3.jpg', 'price': 20000},
-  {'name': 'Bakso Udang', 'imagePath': 'assets/tenantListImages/4.jpg', 'price': 35000},
-  {'name': 'Jus', 'imagePath': 'assets/tenantListImages/5.jpg', 'price': 15000},
-  {'name': 'Zuppa Soup', 'imagePath': 'assets/tenantListImages/6.jpg', 'price': 28000},
-  {'name': 'Batagor', 'imagePath': 'assets/tenantListImages/7.jpg', 'price': 18000},
-  {'name': 'Kwetiau Goreng', 'imagePath': 'assets/tenantListImages/8.jpg', 'price': 22000},
-];
-
-  void _incrementQuantity(String menuName) {
+  void loadTenantList() {
     setState(() {
-      _menuQuantities[menuName] = (_menuQuantities[menuName] ?? 0) + 1;
+      _futureTenantList = TenantService.getTenantList();
     });
   }
 
-  void _decrementQuantity(String menuName) {
-    setState(() {
-      if (_menuQuantities[menuName] != null && _menuQuantities[menuName]! > 0) {
-        _menuQuantities[menuName] = (_menuQuantities[menuName]! - 1);
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    loadTenantList();
   }
 
   @override
@@ -62,125 +50,303 @@ List<Map<String, dynamic>> menuItems = [
             ],
           ),
         ),
-        for (var menuName in _menuQuantities.keys) _buildMenu(menuName),
+        FutureBuilder<List<TenantModel>>(
+          future: _futureTenantList,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                height: 1000.0,
+                child: ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 22, top: 8, bottom: 10),
+                        child: Text(
+                          snapshot.data![index].nama_tenant,
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Color.fromRGBO(126, 0, 0, 1),
+                          ),
+                        ),
+                      ),
+                      TenantMenuCard(tenant: snapshot.data![index]),
+                    ],
+                  ),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: TextButton(
+                  onPressed: loadTenantList,
+                  child: Text('Error: ${snapshot.error}'),
+                ),
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
       ],
     );
   }
-
-  Widget _buildMenu(String menuName) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 22, top: 8, bottom: 10),
-          child: Text(
-            menuName,
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Color.fromRGBO(126, 0, 0, 1),
-            ),
-          ),
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              for (var menuItem in menuItems)
-                _buildMenuItem(menuName, menuItem),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMenuItem(String menuName, Map<String, dynamic> menuItem) {
-  final uniqueKey = '${menuName}-${menuItem['name']}';
-
-  return Container(
-    key: Key(uniqueKey),
-    margin: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-    height: 120,
-    width: 300,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.5),
-          spreadRadius: 1,
-          blurRadius: 6,
-        ),
-      ],
-    ),
-    child: Row(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(15),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              menuItem['imagePath'] ?? '',
-              height: 100,
-              width: 100,
-            ),
-          ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 10, right: 5, top: 30),
-              child: Text(
-                menuItem['name'] ?? '',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Color.fromRGBO(202, 37, 37, 1),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10, right: 5),
-              child: Text(
-                "Rp${menuItem['price'] ?? 0}", // Display the price
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline,
-                      color: Color.fromRGBO(211, 36, 43, 1)),
-                  onPressed: () => _incrementQuantity(uniqueKey),
-                ),
-                Text(
-                  (_menuQuantities[uniqueKey] ?? 0).toString(),
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.remove_circle_outline,
-                    color: Color.fromRGBO(211, 36, 43, 1),
-                  ),
-                  onPressed: () => _decrementQuantity(uniqueKey),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
 }
 
+class TenantMenuCard extends StatefulWidget {
+  const TenantMenuCard({
+    super.key,
+    required this.tenant,
+  });
+
+  final TenantModel tenant;
+
+  @override
+  State<TenantMenuCard> createState() => _TenantMenuCardState();
+}
+
+class _TenantMenuCardState extends State<TenantMenuCard> {
+  Future<List<TenantMenuModel>>? _futureTenantMenuList;
+
+  void loadTenantMenuList(int tenantId) {
+    setState(() {
+      _futureTenantMenuList = TenantService.getTenantMenuList(tenantId);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadTenantMenuList(widget.tenant.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<TenantMenuModel>>(
+      future: _futureTenantMenuList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            height: 150.0,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final item = snapshot.data![index];
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  height: 120,
+                  width: 300,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 6,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(15),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            dotenv.env['API_URL']! + "/file/" + item.fotoProduk,
+                            height: 100,
+                            width: 100,
+                          ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding:
+                                EdgeInsets.only(left: 10, right: 5, top: 30),
+                            child: Text(
+                              item.namaProduk,
+                              style: GoogleFonts.poppins(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromRGBO(202, 37, 37, 1),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10, right: 5),
+                            child: Text(
+                              item.hargaProduk.toString(),
+                              style: GoogleFonts.poppins(
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          CartItemCount(
+                            tenant: widget.tenant,
+                            menu: item,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+}
+
+class CartItemCount extends StatefulWidget {
+  final TenantModel tenant;
+  final TenantMenuModel menu;
+
+  const CartItemCount({
+    super.key,
+    required this.tenant,
+    required this.menu,
+  });
+
+  @override
+  State<CartItemCount> createState() => _CartItemCountState();
+}
+
+class _CartItemCountState extends State<CartItemCount> {
+  int quantity = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _getQuantityFromDatabase();
+  }
+
+  Future<void> _getQuantityFromDatabase() async {
+    final db = await DatabaseHelper.instance.database;
+    final maps = await db.query(
+      'cart_items',
+      where: 'idTenant = ? AND idMenu = ?',
+      whereArgs: [widget.tenant.id, widget.menu.id],
+    );
+    if (maps.isNotEmpty) {
+      setState(() {
+        quantity = maps.first['quantity'] as int;
+      });
+    }
+  }
+
+  Future<void> addToCart() async {
+    final db = await DatabaseHelper.instance.database;
+
+    // Check if there are any items in the cart
+    final existingItems = await db.query('cart_items');
+    if (existingItems.isNotEmpty) {
+      // Get the idTenant of the first item
+      final firstItemTenantId = existingItems.first['idTenant'] as int;
+      // Compare with the current item's idTenant
+      if (firstItemTenantId != widget.tenant.id) {
+        // Show AlertDialog if the tenant ids don't match
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Tidak dapat menambahkan ke keranjang!'),
+              content: Text(
+                  'Anda tidak dapat memesan dari tenant yang berbeda dalam satu pesanan. Silakan hapus semua item dari tenant sebelumnya terlebih dahulu.'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return; // Exit the function early if there's a mismatch
+      }
+    }
+
+    // If no mismatch found, proceed with adding the item to the cart
+    final existingCartItem = await DatabaseHelper.instance
+        .queryCartItemByIds(widget.tenant.id, widget.menu.id);
+
+    if (existingCartItem != null) {
+      // If the cart item already exists, update its quantity
+      existingCartItem.quantity++;
+      await DatabaseHelper.instance.updateCartItem(existingCartItem);
+    } else {
+      // If the cart item doesn't exist, create a new one
+      final cartItem = CartItemModel(
+        id: null,
+        idTenant: widget.tenant.id,
+        idMenu: widget.menu.id,
+        quantity: 1,
+        harga: int.parse(widget.menu.hargaProduk),
+      );
+      await DatabaseHelper.instance.insertCartItem(cartItem);
+    }
+
+    await _getQuantityFromDatabase();
+  }
+
+  Future<void> removeFromCart() async {
+    final existingCartItem = await DatabaseHelper.instance
+        .queryCartItemByIds(widget.tenant.id, widget.menu.id);
+
+    if (existingCartItem != null) {
+      if (existingCartItem.quantity > 1) {
+        // If the quantity is greater than 1, decrement it
+        existingCartItem.quantity--;
+        await DatabaseHelper.instance.updateCartItem(existingCartItem);
+      } else {
+        // If the quantity is 1, remove the cart item
+        await DatabaseHelper.instance
+            .deleteCartItem(widget.tenant.id, widget.menu.id);
+      }
+    }
+
+    await _getQuantityFromDatabase();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          icon: Icon(Icons.add_circle_outline,
+              color: Color.fromRGBO(211, 36, 43, 1)),
+          onPressed: addToCart,
+        ),
+        Text(
+          quantity.toString(),
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.remove_circle_outline,
+              color: Color.fromRGBO(211, 36, 43, 1)),
+          onPressed: removeFromCart,
+        ),
+      ],
+    );
+  }
 }

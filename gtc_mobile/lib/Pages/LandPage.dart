@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../Widgets/TenantListWidget.dart';
 import '../Widgets/OngoingOrdersWidget.dart';
 import '../Widgets/OrdersQueueWidget.dart';
@@ -37,7 +36,6 @@ class _LandPageState extends State<LandPage> {
                   children: [
                     TenantListWidget(),
                     OngoingOrdersWidget(),
-                    OrdersQueueWidget(),
                   ],
                 ),
               ),

@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  device_info_plus: ^10.1.0
+  dio: ^5.4.3
+  sqflite: ^2.3.3+1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -45,6 +48,7 @@ dependencies:
   switcher_button: ^0.0.4
   flutter_advanced_switch: ^3.1.0
   adaptive_dialog: ^2.1.0
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +70,7 @@ flutter:
   assets:
     - assets/
     - assets/tenantListImages/
+    - .env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
