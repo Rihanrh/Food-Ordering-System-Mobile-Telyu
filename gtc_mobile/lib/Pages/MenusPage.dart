@@ -13,32 +13,40 @@ class _MenusPageState extends State<MenusPage> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(211, 36, 43, 1),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SearchBarWidget(),
-              Container(
-                padding: EdgeInsets.only(right: 20, left: 15, top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [],
-                ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SearchBarWidget(),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 70), // Adjust this value based on SearchBarWidget's height
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Container(
+                      padding: EdgeInsets.only(right: 20, left: 15, top: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [],
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      padding: EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: MenusWidget(),
+                    ),
+                  ),
+                ],
               ),
-
-              Container(
-                padding: EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MenusWidget(),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

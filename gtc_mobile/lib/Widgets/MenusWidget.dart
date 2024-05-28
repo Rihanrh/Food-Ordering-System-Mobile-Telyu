@@ -29,69 +29,66 @@ class _MenusWidgetState extends State<MenusWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return FutureBuilder<List<TenantModel>>(
+      future: _futureTenantList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 12, top: 10),
-                child: Text(
-                  "Daftar Menu",
-                  style: GoogleFonts.poppins(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(211, 36, 43, 1),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        FutureBuilder<List<TenantModel>>(
-          future: _futureTenantList,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Container(
-                height: 1000.0,
-                child: ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 22, top: 8, bottom: 10),
-                        child: Text(
-                          snapshot.data![index].nama_tenant,
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Color.fromRGBO(126, 0, 0, 1),
-                          ),
+                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 12, top: 10),
+                      child: Text(
+                        "Daftar Menu",
+                        style: GoogleFonts.poppins(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(211, 36, 43, 1),
                         ),
                       ),
-                      TenantMenuCard(tenant: snapshot.data![index]),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: TextButton(
-                  onPressed: loadTenantList,
-                  child: Text('Error: ${snapshot.error}'),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),  
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 22, top: 8, bottom: 10),
+                      child: Text(
+                        snapshot.data![index].nama_tenant,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromRGBO(126, 0, 0, 1),
+                        ),
+                      ),
+                    ),
+                    TenantMenuCard(tenant: snapshot.data![index]),
+                  ],
                 ),
-              );
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
-      ],
+              ),
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: TextButton(
+              onPressed: loadTenantList,
+              child: Text('Error: ${snapshot.error}'),
+            ),
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }
