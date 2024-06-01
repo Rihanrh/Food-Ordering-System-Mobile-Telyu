@@ -26,7 +26,7 @@ void main() async {
     final existingPembeli = await AkunPembeliService.getPembeli(deviceId!);
 
     if (existingPembeli == null) {
-      final newPembeli = await AkunPembeliService.createPembeli(deviceId!);
+      final newPembeli = await AkunPembeliService.createPembeli(deviceId);
       debugPrint('New pembeli created: ${newPembeli.id}');
     } else {
       debugPrint('Existing pembeli found: ${existingPembeli.id}');

@@ -7,7 +7,7 @@ import 'package:gtc_mobile/Models/PesananTenantModel.dart';
 import 'package:gtc_mobile/Services/AkunPembeliService.dart';
 import 'package:gtc_mobile/Services/PesananTenantService.dart';
 import 'package:gtc_mobile/Services/TenantService.dart';
-import '../Pages/OngoingOrderDetailPage.dart' as OngoingOrderDetailPage;
+import '../Pages/OrderDetailPage.dart' as OrderDetailPage;
 import 'package:collection/collection.dart'; // for groupBy
 
 class OngoingOrdersWidget extends StatefulWidget {
@@ -17,7 +17,6 @@ class OngoingOrdersWidget extends StatefulWidget {
 
 class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
   late Future<Map<int, List<PesananTenantModel>>> _pesananFuture;
-  late int _idPembeli;
 
   @override
   void initState() {
@@ -39,8 +38,11 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
           await PesananTenantsService.getPesananByIdPembeli(pembeli.id);
       final nonNullPesananList =
           pesananList.where((p) => p.idPesanan != null).toList();
+      final filteredPesananList = nonNullPesananList
+          .where((p) => p.statusPesanan != 'Pesanan Selesai')
+          .toList();
       return groupBy(
-          nonNullPesananList, (PesananTenantModel p) => p.idPesanan!);
+          filteredPesananList, (PesananTenantModel p) => p.idPesanan!);
     } catch (e) {
       if (e.toString().contains('404')) {
         // Handle 404 error, return an empty map
@@ -76,25 +78,6 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 12, top: 10),
-                child: Text(
-                  "Pesanan Sedang Berlangsung",
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Color.fromRGBO(211, 36, 43, 1),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
         FutureBuilder<Map<int, List<PesananTenantModel>>>(
           future: _pesananFuture,
           builder: (context, snapshot) {
@@ -146,8 +129,8 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OngoingOrderDetailPage
-                                  .OngoingOrderDetailPage()),
+                              builder: (context) => OrderDetailPage
+                                  .OrderDetailPage(idPesanan: idPesanan)),
                         );
                       },
                       child: Container(
@@ -249,17 +232,20 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
                                                             126, 0, 0, 1),
                                                       ),
                                                     ),
-                                                    Text(
-                                                      'Queue: ${firstPesanan.queue}',
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                        fontSize: 13,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        color: Color.fromRGBO(
-                                                            126, 0, 0, 1),
+                                                    if (firstPesanan
+                                                            .statusPesanan !=
+                                                        'Menunggu Konfirmasi Pembayaran')
+                                                      Text(
+                                                        'Queue: ${firstPesanan.queue}',
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: Color.fromRGBO(
+                                                              126, 0, 0, 1),
+                                                        ),
                                                       ),
-                                                    ),
                                                   ],
                                                 ),
                                               ),

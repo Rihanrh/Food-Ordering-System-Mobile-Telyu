@@ -61,6 +61,26 @@ class PesananTenantsService {
     }
   }
 
+  static Future<List<PesananTenantModel>> getPesananByIdPesanan(
+      int idPesanan) async {
+    try {
+      final response = await _dio.get('$url/api/pesanan/$idPesanan');
+      if (response.statusCode == 200) {
+        List<PesananTenantModel> pesananList = [];
+        for (var pesananData in response.data) {
+          pesananList.add(PesananTenantModel.fromJson(pesananData));
+        }
+        return pesananList;
+      } else {
+        throw Exception(
+            'Failed to get pesanan by idPesanan: ${response.statusCode} ${response.statusMessage}');
+      }
+    } catch (e) {
+      debugPrint('Error getting pesanan by idPesanan: $e');
+      rethrow;
+    }
+  }
+
   static Future<Map<int, List<PesananTenantModel>>>
       getPesananByIdPembeliGrouped(int idPembeli) async {
     try {

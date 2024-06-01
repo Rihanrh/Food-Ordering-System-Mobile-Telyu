@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../Pages/OngoingOrderDetailPage.dart' as OngoingOrderDetailPage;
+import '../Pages/OrderDetailPage.dart' as OngoingOrderDetailPage;
 
 class SedangBerlangsungPesananWidget extends StatelessWidget {
   @override
@@ -21,12 +21,12 @@ class SedangBerlangsungPesananWidget extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                OngoingOrderDetailPage.OngoingOrderDetailPage()),
-                      );
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) =>
+                    //             OngoingOrderDetailPage.OngoingOrderDetailPage()),
+                    //   );
                   },
                   child: Stack(
                     children: [

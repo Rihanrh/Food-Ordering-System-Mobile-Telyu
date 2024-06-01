@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Widgets/SedangBerlangsungPesananWidget.dart';
 import '../Widgets/HistoryOrdersWidget.dart';
+import '../Widgets/OngoingOrdersWidget.dart';
 
 class OrdersPage extends StatelessWidget {
   const OrdersPage({Key? key}) : super(key: key);
@@ -67,7 +68,7 @@ class OrdersPage extends StatelessWidget {
         body: TabBarView(
           children: [
             HistoryOrdersWidget(),
-            SedangBerlangsungPesananWidget(),
+            OngoingOrdersWidget(),
           ],
         ),
       ),
