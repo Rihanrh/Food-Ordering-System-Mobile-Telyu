@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gtc_mobile/Models/PesananTenantModel.dart';
 import 'package:gtc_mobile/Models/TenantMenuModel.dart';
+import 'package:gtc_mobile/Pages/ReorderPage.dart';
 import 'package:gtc_mobile/Services/AkunPembeliService.dart';
 import 'package:gtc_mobile/Services/PesananTenantService.dart';
 import 'package:gtc_mobile/Services/TenantService.dart';
 import 'package:gtc_mobile/Pages/OrderDetailPage.dart';
-import '../Pages/HistoryOrderDetailPage.dart';
 import 'CheckoutWidget.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -245,7 +245,14 @@ class _HistoryOrdersWidgetState extends State<HistoryOrdersWidget> {
                                         ),
                                       ),
                                       onPressed: () {
-                                        CheckoutModal.show(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ReorderPage(
+                                                    idPesanan: entry.key),
+                                          ),
+                                        );
                                       },
                                       child: Text(
                                         'Pesan Kembali',

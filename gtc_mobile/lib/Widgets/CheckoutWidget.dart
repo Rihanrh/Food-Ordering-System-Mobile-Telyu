@@ -14,7 +14,6 @@ import 'package:gtc_mobile/Services/TenantService.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gtc_mobile/Models/PesananTenantModel.dart';
 import 'package:gtc_mobile/Services/PesananTenantService.dart';
-import 'package:gtc_mobile/Services/AkunPembeliService.dart';
 
 class CheckoutModal {
   static final _controller = ValueNotifier<bool>(false);
@@ -97,7 +96,7 @@ class _CheckoutModalWidgetState extends State<CheckoutModalWidget> {
           _idPembeli = existingPembeli.id;
         });
       } else {
-        final newPembeli = await AkunPembeliService.createPembeli(deviceId!);
+        final newPembeli = await AkunPembeliService.createPembeli(deviceId);
         setState(() {
           _idPembeli = newPembeli.id;
         });

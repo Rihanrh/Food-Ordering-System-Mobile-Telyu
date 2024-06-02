@@ -4,7 +4,7 @@ import 'package:gtc_mobile/Models/PesananTenantModel.dart';
 import 'package:gtc_mobile/Models/TenantMenuModel.dart';
 import 'package:gtc_mobile/Services/PesananTenantService.dart';
 import 'package:gtc_mobile/Services/TenantService.dart';
-import '../Widgets/BottomNavBarWidget.dart' as BottomNavBar;
+import 'package:gtc_mobile/Pages/ReorderPage.dart';
 
 class OrderDetailPage extends StatefulWidget {
   final int idPesanan;
@@ -242,7 +242,15 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       child: ElevatedButton(
                         onPressed:
                             firstPesanan.statusPesanan == 'Pesanan Selesai'
-                                ? () {}
+                                ? () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ReorderPage(
+                                            idPesanan: widget.idPesanan),
+                                      ),
+                                    );
+                                  }
                                 : null,
                         style: ButtonStyle(
                           backgroundColor:
