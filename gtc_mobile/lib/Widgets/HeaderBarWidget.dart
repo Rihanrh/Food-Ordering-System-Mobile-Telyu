@@ -4,12 +4,12 @@ import 'package:gtc_mobile/Services/DatabaseHelper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'CheckoutWidget.dart';
 
-class SearchBarWidget extends StatefulWidget {
+class HeaderBarWidget extends StatefulWidget {
   @override
-  _SearchBarWidgetState createState() => _SearchBarWidgetState();
+  _HeaderBarWidgetState createState() => _HeaderBarWidgetState();
 }
 
-class _SearchBarWidgetState extends State<SearchBarWidget> {
+class _HeaderBarWidgetState extends State<HeaderBarWidget> {
   int cartItemCount = 0;
 
   @override
@@ -29,31 +29,6 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.all(10),
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.search),
-                SizedBox(width: 10),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      hintText: "Cari Kebutuhanmu",
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: Stack(

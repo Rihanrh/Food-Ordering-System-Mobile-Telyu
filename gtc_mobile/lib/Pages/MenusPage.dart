@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Widgets/MenusWidget.dart';
-import '../Widgets/SearchBarWidget.dart';
+import '../Widgets/HeaderBarWidget.dart';
 
 class MenusPage extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _MenusPageState extends State<MenusPage> {
               top: 0,
               left: 0,
               right: 0,
-              child: SearchBarWidget(),
+              child: HeaderBarWidget(),
             ),
             Padding(
               padding: EdgeInsets.only(top: 70), // Adjust this value based on SearchBarWidget's height

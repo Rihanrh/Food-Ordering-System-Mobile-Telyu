@@ -3,6 +3,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import '../Pages/LandPage.dart';
 import '../Pages/MenusPage.dart';
 import '../Pages/OrdersPage.dart';
+import '../Pages/CheckoutPage.dart';
 
 class BottomNavigationBar extends StatefulWidget {
   const BottomNavigationBar({Key? key}) : super(key: key);
@@ -39,15 +40,19 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
         },
         children: [
           MenusPage(),
-          LandPage(),
+          
           OrdersPage(),
+          LandPage(),
+          CheckoutPage(),
         ],
       ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
         icons: [
           Icons.fastfood_outlined,
-          Icons.home_outlined,
+          
           Icons.list_alt_outlined,
+          Icons.home_outlined,
+          Icons.shopping_cart_checkout_outlined,
         ],
         inactiveColor: Color.fromRGBO(116, 116, 116, 1),
         activeColor: Color.fromRGBO(211, 36, 43, 1),
