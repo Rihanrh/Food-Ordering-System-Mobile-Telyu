@@ -182,30 +182,18 @@ class _HistoryOrdersWidgetState extends State<HistoryOrdersWidget> {
                                                           return Text(
                                                               'Error: ${snapshotMenu.error}');
                                                         } else {
-                                                          final menu =
-                                                              snapshotMenu
-                                                                  .data!;
-                                                          final firstPesanan =
-                                                              pesananList.first;
-                                                          final displayText =
-                                                              '${menu.namaProduk} ${firstPesanan.quantity}x';
+                                                          final menu = snapshotMenu.data!;
+                                                          final firstPesanan = pesananList.first;
+                                                          final displayText = '${menu.namaProduk} ${firstPesanan.quantity}x';
                                                           return Text(
-                                                            pesananList.length >
-                                                                    1
-                                                                ? '$displayText, ...'
-                                                                : displayText,
-                                                            style: GoogleFonts
-                                                                .poppins(
+                                                            pesananList.length > 1 ? '$displayText, ...' : displayText,
+                                                            style: GoogleFonts.poppins(
                                                               fontSize: 12,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500,
                                                               color: Color
-                                                                  .fromRGBO(
-                                                                      113,
-                                                                      0,
-                                                                      0,
-                                                                      0.5),
+                                                                  .fromRGBO(113,0,0,0.5),
                                                             ),
                                                           );
                                                         }
@@ -214,7 +202,7 @@ class _HistoryOrdersWidgetState extends State<HistoryOrdersWidget> {
                                                 ],
                                               ),
                                               Text(
-                                                'Rp$totalHarga',
+                                                'Rp. $totalHarga',
                                                 style: GoogleFonts.poppins(
                                                     fontSize: 13,
                                                     fontWeight: FontWeight.w600,
