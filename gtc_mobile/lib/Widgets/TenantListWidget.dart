@@ -63,8 +63,6 @@ class _TenantListWidgetState extends State<TenantListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> currentPageData =
-        tenantList.take(_currentPage * _pageSize).toList();
 
     return Column(
       children: [
