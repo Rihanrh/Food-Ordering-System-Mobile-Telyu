@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:flutter/material.dart';
 import '../Pages/LandPage.dart';
 import '../Pages/MenusPage.dart';
 import '../Pages/OrdersPage.dart';
