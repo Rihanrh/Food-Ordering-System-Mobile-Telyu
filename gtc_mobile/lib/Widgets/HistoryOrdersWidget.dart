@@ -8,7 +8,6 @@ import 'package:gtc_mobile/Services/AkunPembeliService.dart';
 import 'package:gtc_mobile/Services/PesananTenantService.dart';
 import 'package:gtc_mobile/Services/TenantService.dart';
 import 'package:gtc_mobile/Pages/OrderDetailPage.dart';
-import 'CheckoutWidget.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 

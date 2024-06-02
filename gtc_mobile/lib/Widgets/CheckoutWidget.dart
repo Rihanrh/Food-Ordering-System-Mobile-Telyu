@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gtc_mobile/Services/AkunPembeliService.dart';
-import 'SelectTable.dart';
 import '../Pages/PaymentConfirmationLoadPage.dart';
 import 'package:gtc_mobile/Models/CartItemModel.dart';
 import 'package:gtc_mobile/Services/DatabaseHelper.dart';
@@ -659,16 +658,6 @@ Widget build(BuildContext context) {
     ),
   );
 }
-}
-
-Future<void> _showSelectTableDialog(BuildContext context) async {
-  await showDialog(
-    context: context,
-    builder: (context) => SelectTableWidget(onTableSelected: (selectedTable) {
-      print('Selected Table: $selectedTable');
-      Navigator.pop(context);
-    }),
-  );
 }
 
 class CartHelper {
