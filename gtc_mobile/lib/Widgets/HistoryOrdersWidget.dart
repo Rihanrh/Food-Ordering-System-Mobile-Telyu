@@ -6,6 +6,7 @@ import 'package:gtc_mobile/Models/TenantMenuModel.dart';
 import 'package:gtc_mobile/Services/AkunPembeliService.dart';
 import 'package:gtc_mobile/Services/PesananTenantService.dart';
 import 'package:gtc_mobile/Services/TenantService.dart';
+import 'package:gtc_mobile/Pages/OrderDetailPage.dart';
 import '../Pages/HistoryOrderDetailPage.dart';
 import 'CheckoutWidget.dart';
 import 'package:collection/collection.dart';
@@ -121,7 +122,7 @@ class _HistoryOrdersWidgetState extends State<HistoryOrdersWidget> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        HistoryOrderDetailPage(),
+                                        OrderDetailPage(idPesanan: entry.key),
                                   ),
                                 );
                               },
@@ -182,18 +183,30 @@ class _HistoryOrdersWidgetState extends State<HistoryOrdersWidget> {
                                                           return Text(
                                                               'Error: ${snapshotMenu.error}');
                                                         } else {
-                                                          final menu = snapshotMenu.data!;
-                                                          final firstPesanan = pesananList.first;
-                                                          final displayText = '${menu.namaProduk} ${firstPesanan.quantity}x';
+                                                          final menu =
+                                                              snapshotMenu
+                                                                  .data!;
+                                                          final firstPesanan =
+                                                              pesananList.first;
+                                                          final displayText =
+                                                              '${menu.namaProduk} ${firstPesanan.quantity}x';
                                                           return Text(
-                                                            pesananList.length > 1 ? '$displayText, ...' : displayText,
-                                                            style: GoogleFonts.poppins(
+                                                            pesananList.length >
+                                                                    1
+                                                                ? '$displayText, ...'
+                                                                : displayText,
+                                                            style: GoogleFonts
+                                                                .poppins(
                                                               fontSize: 12,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500,
                                                               color: Color
-                                                                  .fromRGBO(113,0,0,0.5),
+                                                                  .fromRGBO(
+                                                                      113,
+                                                                      0,
+                                                                      0,
+                                                                      0.5),
                                                             ),
                                                           );
                                                         }

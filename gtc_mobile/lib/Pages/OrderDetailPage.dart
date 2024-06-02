@@ -240,10 +240,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed:
+                            firstPesanan.statusPesanan == 'Pesanan Selesai'
+                                ? () {}
+                                : null,
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Color.fromRGBO(219, 219, 219, 1),
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.disabled)) {
+                                return Color.fromRGBO(219, 219, 219, 1);
+                              }
+                              return Color.fromRGBO(211, 36, 43, 1);
+                            },
                           ),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -253,7 +262,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           ),
                         ),
                         child: Text(
-                          'Pesanan Diterima',
+                          firstPesanan.statusPesanan == 'Pesanan Selesai'
+                              ? 'Pesan Kembali'
+                              : 'Pesanan Diterima',
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                           ),
