@@ -16,9 +16,11 @@ class _MenusWidgetState extends State<MenusWidget> {
   Future<List<TenantModel>>? _futureTenantList;
 
   void loadTenantList() {
-    setState(() {
-      _futureTenantList = TenantService.getTenantList();
-    });
+    if (_futureTenantList == null) {
+      setState(() {
+        _futureTenantList = TenantService.getTenantList();
+      });
+    }
   }
 
   @override
@@ -90,9 +92,11 @@ class _TenantMenuCardState extends State<TenantMenuCard> {
   Future<List<TenantMenuModel>>? _futureTenantMenuList;
 
   void loadTenantMenuList(int tenantId) {
-    setState(() {
-      _futureTenantMenuList = TenantService.getTenantMenuList(tenantId);
-    });
+    if (_futureTenantMenuList == null) {
+      setState(() {
+        _futureTenantMenuList = TenantService.getTenantMenuList(tenantId);
+      });
+    }
   }
 
   @override

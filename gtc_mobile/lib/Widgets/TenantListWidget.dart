@@ -21,9 +21,11 @@ class _TenantListWidgetState extends State<TenantListWidget> {
   ScrollController _scrollController = ScrollController();
 
   void loadTenantList() {
-    setState(() {
-      _futureTenantList = TenantService.getTenantList();
-    });
+    if (_futureTenantList == null) {
+      setState(() {
+        _futureTenantList = TenantService.getTenantList();
+      });
+    }
   }
 
   @override
@@ -96,10 +98,12 @@ class _TenantListWidgetState extends State<TenantListWidget> {
                 return ListView.builder(
                   itemCount: snapshot.data!.length,
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => TenantProfileCard(tenant: snapshot.data![index]),
+                  itemBuilder: (context, index) =>
+                      TenantProfileCard(tenant: snapshot.data![index]),
                 );
               } else if (snapshot.hasError) {
-                return Center(child: TextButton(
+                return Center(
+                    child: TextButton(
                   onPressed: loadTenantList,
                   child: Text('Error: ${snapshot.error}'),
                 ));
@@ -130,13 +134,15 @@ class _TenantProfileCardState extends State<TenantProfileCard> {
   Future<List<TenantMenuModel>>? _futureTenantMenuList;
 
   void loadTenantMenuList(int idTenant) {
-    setState(() {
-      _futureTenantMenuList = TenantService.getTenantMenuList(idTenant);
-    });
+    if (_futureTenantMenuList == null) {
+      setState(() {
+        _futureTenantMenuList = TenantService.getTenantMenuList(idTenant);
+      });
+    }
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     loadTenantMenuList(widget.tenant.id);
   }
@@ -146,40 +152,45 @@ class _TenantProfileCardState extends State<TenantProfileCard> {
     return SizedBox(
       width: 160,
       child: Card.filled(
-        color: Colors.white,
-        elevation: 4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            FutureBuilder<List<TenantMenuModel>>(
-              future: _futureTenantMenuList,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                      dotenv.env['API_URL']! + "/file/" + snapshot.data![0].fotoProduk,
-                                    ),
-                                  ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(child: TextButton(
-                    onPressed: () => loadTenantMenuList(widget.tenant.id),
-                    child: Text('Error: ${snapshot.error}'),
-                  ));
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-            Text(widget.tenant.nama_tenant, textAlign: TextAlign.center,),
-          ],
-        )
-      ),
+          color: Colors.white,
+          elevation: 4,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              FutureBuilder<List<TenantMenuModel>>(
+                future: _futureTenantMenuList,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          height: 100,
+                          fit: BoxFit.cover,
+                          dotenv.env['API_URL']! +
+                              "/file/" +
+                              snapshot.data![0].fotoProduk,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                        child: TextButton(
+                      onPressed: () => loadTenantMenuList(widget.tenant.id),
+                      child: Text('Error: ${snapshot.error}'),
+                    ));
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+              Text(
+                widget.tenant.nama_tenant,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          )),
     );
   }
 }

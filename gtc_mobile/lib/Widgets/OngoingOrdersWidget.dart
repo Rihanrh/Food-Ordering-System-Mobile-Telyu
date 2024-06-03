@@ -129,8 +129,9 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OrderDetailPage
-                                  .OrderDetailPage(idPesanan: idPesanan)),
+                              builder: (context) =>
+                                  OrderDetailPage.OrderDetailPage(
+                                      idPesanan: idPesanan)),
                         );
                       },
                       child: Container(
@@ -150,7 +151,9 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
                           ],
                         ),
                         child: FutureBuilder<String>(
-                          future: getTenantMenuImageUrl(firstPesanan),
+                          future: pesananList.isNotEmpty
+                              ? getTenantMenuImageUrl(firstPesanan)
+                              : null,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -160,8 +163,10 @@ class _OngoingOrdersWidgetState extends State<OngoingOrdersWidget> {
                             } else {
                               final imageUrl = snapshot.data!;
                               return FutureBuilder<String>(
-                                future: TenantService.getTenantNameById(
-                                    firstPesanan.idTenant),
+                                future: pesananList.isNotEmpty
+                                    ? TenantService.getTenantNameById(
+                                        firstPesanan.idTenant)
+                                    : null,
                                 builder: (context, snapshotTenantName) {
                                   if (snapshotTenantName.connectionState ==
                                       ConnectionState.waiting) {
