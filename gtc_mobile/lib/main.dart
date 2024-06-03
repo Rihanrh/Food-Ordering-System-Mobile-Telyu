@@ -73,6 +73,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  bool _notificationReceived = false;
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   @override
   void initState() {
     super.initState();
@@ -109,13 +111,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       // Handle navigation when the app is opened from a notification
       _handleNotificationNavigation(message);
     });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      setState(() {
+        _notificationReceived = true;
+      });
+    });
   }
 
-  void _handleNotificationNavigation(RemoteMessage message) {
-    // Navigate to the BottomNavigationBar widget
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => BottomNavBarWidget.BottomNavigationBar()),
+  void _handleNotificationNavigation(RemoteMessage message) async {
+    await Future.delayed(Duration(seconds: 1));
+    _navigatorKey.currentState?.pushReplacement(
+      MaterialPageRoute(
+          builder: (context) => BottomNavBarWidget.BottomNavigationBar()),
     );
   }
 
@@ -136,12 +144,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: _navigatorKey, // Add this line
       title: 'Kantin Telyu',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: const Color.fromRGBO(211, 36, 43, 1),
       ),
-      home: BottomNavBarWidget.BottomNavigationBar(),
+      home: Builder(
+        builder: (context) {
+          return BottomNavBarWidget.BottomNavigationBar();
+        },
+      ),
     );
   }
 }
