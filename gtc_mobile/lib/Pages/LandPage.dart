@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Widgets/TenantListWidget.dart';
 import '../Widgets/OngoingOrdersWidget.dart';
-import '../Widgets/HeaderBarWidget.dart';
 
 class LandPage extends StatefulWidget {
   @override
@@ -18,8 +17,6 @@ class _LandPageState extends State<LandPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              HeaderBarWidget(),
-              
               Container(
                 padding: EdgeInsets.only(right: 20, left: 15, top: 5),
                 child: Row(
@@ -49,7 +46,7 @@ class _LandPageState extends State<LandPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '123456', // Replace with actual user code
+                                'Welcome, User!', 
                                 style: GoogleFonts.poppins(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,

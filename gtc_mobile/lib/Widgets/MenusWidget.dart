@@ -35,25 +35,6 @@ class _MenusWidgetState extends State<MenusWidget> {
         if (snapshot.hasData) {
           return Column(
             children: [
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 12, top: 10),
-                      child: Text(
-                        "Daftar Menu",
-                        style: GoogleFonts.poppins(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(211, 36, 43, 1),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),  

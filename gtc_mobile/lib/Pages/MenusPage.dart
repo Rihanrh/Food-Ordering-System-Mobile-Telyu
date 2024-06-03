@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../Widgets/MenusWidget.dart';
-import '../Widgets/HeaderBarWidget.dart';
 
 class MenusPage extends StatefulWidget {
   @override
@@ -15,11 +15,22 @@ class _MenusPageState extends State<MenusPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: HeaderBarWidget(),
+            Column(
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Text(
+                      "Daftar Menu",
+                      style: GoogleFonts.poppins(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Padding(
               padding: EdgeInsets.only(top: 70), // Adjust this value based on SearchBarWidget's height
