@@ -1,7 +1,15 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../Widgets/TenantListWidget.dart';
 import '../Widgets/OngoingOrdersWidget.dart';
+import '../Widgets/OrdersQueueWidget.dart';
+import '../Widgets/SearchBarWidget.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import '../Widgets/TenantListWidget.dart';
+import '../Widgets/OngoingOrdersWidget.dart';
+import 'dart:io';
+import 'package:path/path.dart';
 
 class LandPage extends StatefulWidget {
   @override
@@ -9,6 +17,31 @@ class LandPage extends StatefulWidget {
 }
 
 class _LandPageState extends State<LandPage> {
+  File? _imageFile;
+  String imageFile = '';
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    final PickedFile = await _picker.pickImage(source: source);
+    if (PickedFile != null) {
+      setState(() {
+        _imageFile = File(PickedFile.path);
+      });
+    }
+    imageFile = await uploadImage(_imageFile!);
+    setState(() {});
+  }
+
+  Future<String> uploadImage(File imageFile) async {
+    String fileName = basename(imageFile.path);
+
+    Reference ref = FirebaseStorage.instance.ref().child(fileName);
+    UploadTask task = ref.putFile(imageFile);
+    TaskSnapshot snapshot = await task.whenComplete(() => {});
+
+    return await snapshot.ref.getDownloadURL();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,11 +66,19 @@ class _LandPageState extends State<LandPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    TenantListWidget(),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         children: [
                           CircleAvatar(
+                              radius: 40,
+                              backgroundImage: _imageFile != null
+                                  ? FileImage(_imageFile!)
+                                  : const NetworkImage(
+                                          'https://firebasestorage.googleapis.com/v0/b/gtc-mobile-92e1e.appspot.com/o/Screenshot_20221028_233333.png?alt=media&token=6246b5bf-4241-4ebb-9e0a-347a6c48a885')
+                                      as ImageProvider // Replace with your profile image asset
+                              ),
                             radius: 40,
                             backgroundImage: AssetImage('assets/profile.jpg'), // Replace with your profile image asset
                           ),
@@ -53,6 +94,12 @@ class _LandPageState extends State<LandPage> {
                                   color: Color.fromRGBO(211, 36, 43, 1),
                                 ),
                               ),
+                              SizedBox(
+                                  height:
+                                      10), // Add some space between the user code and the button
+                              ElevatedButton(
+                                onPressed: () async {
+                                  await _pickImage(ImageSource.camera);
                               SizedBox(height: 10), // Add some space between the user code and the button
                               ElevatedButton(
                                 onPressed: () {
@@ -67,6 +114,8 @@ class _LandPageState extends State<LandPage> {
                                   ),
                                 ),
                                 style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Color.fromRGBO(211, 36, 43, 1),
                                   backgroundColor: Color.fromRGBO(211, 36, 43, 1),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -80,6 +129,10 @@ class _LandPageState extends State<LandPage> {
                     ),
                     SizedBox(height: 20),
                     TenantListWidget(),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: 10, right: 10, bottom: 5, top: 10),
                      SizedBox(height: 20),
                     Padding(
                       padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 10),
