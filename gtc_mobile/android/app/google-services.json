@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "483836587206",
+    "project_id": "gtc-mobile-92e1e",
+    "storage_bucket": "gtc-mobile-92e1e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483836587206:android:58d2be509fba9dbfc3fbc7",
+        "android_client_info": {
+          "package_name": "com.example.gtc_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_TRj2-xcGrse3hym_8llGu_nl1ISxxhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
