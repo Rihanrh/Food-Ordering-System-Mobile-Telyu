@@ -5,8 +5,6 @@ import '../Widgets/OngoingOrdersWidget.dart';
 import '../Widgets/OrdersQueueWidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import '../Widgets/TenantListWidget.dart';
-import '../Widgets/OngoingOrdersWidget.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 
@@ -74,7 +72,7 @@ class _LandPageState extends State<LandPage> {
                             backgroundImage: _imageFile != null
                                 ? FileImage(_imageFile!)
                                 : const NetworkImage(
-                                        'https://firebasestorage.googleapis.com/v0/b/gtc-mobile-92e1e.appspot.com/o/Screenshot_20221028_233333.png?alt=media&token=6246b5bf-4241-4ebb-9e0a-347a6c48a885')
+                                        'https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=')
                                     as ImageProvider, // Replace with your profile image asset
                           ),
                           SizedBox(width: 20),
