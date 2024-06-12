@@ -39,13 +39,14 @@ class _MenusWidgetState extends State<MenusWidget> {
             children: [
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),  
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 22, top: 8, bottom: 10),
+                      padding:
+                          const EdgeInsets.only(left: 22, top: 8, bottom: 10),
                       child: Text(
                         snapshot.data![index].nama_tenant,
                         style: GoogleFonts.poppins(
@@ -224,11 +225,9 @@ class _CartItemCountState extends State<CartItemCount> {
       where: 'idTenant = ? AND idMenu = ?',
       whereArgs: [widget.tenant.id, widget.menu.id],
     );
-    if (maps.isNotEmpty) {
-      setState(() {
-        quantity = maps.first['quantity'] as int;
-      });
-    }
+    setState(() {
+      quantity = maps.isNotEmpty ? maps.first['quantity'] as int : 0;
+    });
   }
 
   Future<void> addToCart() async {

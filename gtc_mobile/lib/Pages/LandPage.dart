@@ -19,14 +19,13 @@ class _LandPageState extends State<LandPage> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage(ImageSource source) async {
-    final PickedFile = await _picker.pickImage(source: source);
-    if (PickedFile != null) {
+    final pickedFile = await _picker.pickImage(source: source);
+    if (pickedFile != null) {
       setState(() {
-        _imageFile = File(PickedFile.path);
+        _imageFile = File(pickedFile.path);
       });
+      imageFile = await uploadImage(_imageFile!);
     }
-    imageFile = await uploadImage(_imageFile!);
-    setState(() {});
   }
 
   Future<String> uploadImage(File imageFile) async {
@@ -110,7 +109,9 @@ class _LandPageState extends State<LandPage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 10), // Add some space between the user code and the button
+                              SizedBox(
+                                  height:
+                                      10), // Add some space between the user code and the button
                             ],
                           ),
                         ],
